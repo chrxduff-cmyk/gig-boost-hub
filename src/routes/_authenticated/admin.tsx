@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Download, Check, X, Music2, Calendar, Users, DollarSign } from "lucide-react";
+import { Plus, Download, Check, X, Music2, Calendar, Users, DollarSign, UserCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -36,11 +36,13 @@ function AdminPage() {
         <TabsList>
           <TabsTrigger value="apoios">Apoios</TabsTrigger>
           <TabsTrigger value="bandas">Bandas</TabsTrigger>
+          <TabsTrigger value="produtores">Produtores</TabsTrigger>
           <TabsTrigger value="eventos">Eventos</TabsTrigger>
           <TabsTrigger value="ranking">Ranking</TabsTrigger>
         </TabsList>
         <TabsContent value="apoios"><ApoiosTab /></TabsContent>
         <TabsContent value="bandas"><BandasTab /></TabsContent>
+        <TabsContent value="produtores"><ProdutoresTab /></TabsContent>
         <TabsContent value="eventos"><EventosTab /></TabsContent>
         <TabsContent value="ranking"><RankingTab /></TabsContent>
       </Tabs>
@@ -263,6 +265,7 @@ function EventosTab() {
       data_fim_votacao: form.data_fim_votacao || null,
       status: form.status,
       banner_url: form.banner_url || null,
+      produtor_id: form.produtor_id || null,
     };
     const { error } = edit?.id
       ? await supabase.from("eventos").update(payload).eq("id", edit.id)
