@@ -49,6 +49,7 @@ function EventosList() {
                 {new Date(e.data_evento).toLocaleDateString("pt-BR", { dateStyle: "long" })}
               </p>
             )}
+            </div>
           </Link>
         ))}
         {data && data.length === 0 && (
