@@ -198,6 +198,69 @@ export function EventoWizard({
       {step === 1 && (
         <div className="space-y-4">
           <div>
+            <Label>Banner / capa do evento</Label>
+            <div className="mt-2 overflow-hidden rounded-lg border border-dashed border-border bg-card">
+              {f.banner_url ? (
+                <div className="relative">
+                  <img
+                    src={f.banner_url}
+                    alt="Banner do evento"
+                    className="aspect-[16/9] w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => update("banner_url", "")}
+                    className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-md bg-background/90 px-2 py-1 text-xs shadow hover:bg-background"
+                    aria-label="Remover banner"
+                  >
+                    <X className="h-3 w-3" /> Remover
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                  className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-2 text-muted-foreground transition hover:bg-secondary/40 disabled:opacity-60"
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                      <span className="text-sm">Enviando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ImageIcon className="h-8 w-8 opacity-60" />
+                      <span className="text-sm">Clique para enviar uma imagem</span>
+                      <span className="text-xs">JPG, PNG ou WebP · até 5MB · 16:9 recomendado</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+            {f.banner_url && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="mt-2"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+              >
+                {uploading ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <Upload className="mr-2 h-3 w-3" />}
+                Trocar imagem
+              </Button>
+            )}
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={(e) => handleBannerFile(e.target.files?.[0] ?? null)}
+            />
+          </div>
+
+          <div>
             <Label htmlFor="nome">
               Nome do evento <span className="text-fire">*</span>
             </Label>
