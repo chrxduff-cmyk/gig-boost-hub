@@ -342,3 +342,97 @@ function RankingTab() {
     </div>
   );
 }
+
+function ProdutoresTab() {
+  const qc = useQueryClient();
+  const { data } = useQuery({
+    queryKey: ["admin-produtores"],
+    queryFn: async () => (await supabase.from("produtores").select("*").order("created_at", { ascending: false })).data ?? [],
+  });
+  const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState<any>(null);
+
+  async function salvar(form: any) {
+    const payload = {
+      nome: form.nome,
+      bio: form.bio || null,
+      foto: form.foto || null,
+      cidade: form.cidade || null,
+      contato: form.contato || null,
+      instagram: form.instagram || null,
+      site: form.site || null,
+      status: form.status || "ativo",
+    };
+    const { error } = edit?.id
+      ? await supabase.from("produtores").update(payload).eq("id", edit.id)
+      : await supabase.from("produtores").insert(payload);
+    if (error) toast.error(error.message);
+    else { toast.success("Produtor salvo."); setOpen(false); setEdit(null); qc.invalidateQueries(); }
+  }
+
+  return (
+    <div className="mt-6">
+      <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setEdit(null); }}>
+        <DialogTrigger asChild>
+          <Button className="bg-fire"><Plus className="mr-2 h-4 w-4" /> Novo produtor</Button>
+        </DialogTrigger>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>{edit?.id ? "Editar produtor" : "Novo produtor"}</DialogTitle></DialogHeader>
+          <ProdutorForm initial={edit} onSubmit={salvar} />
+        </DialogContent>
+      </Dialog>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {(data ?? []).map((p: any) => (
+          <div key={p.id} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
+            <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-secondary">
+              {p.foto ? <img src={p.foto} alt="" className="h-full w-full object-cover" /> : <UserCircle2 className="h-full w-full text-muted-foreground/40" />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate display text-lg">{p.nome}</p>
+              <p className="truncate text-xs text-muted-foreground">{p.cidade ?? "—"} · {p.status}</p>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => { setEdit(p); setOpen(true); }}>Editar</Button>
+          </div>
+        ))}
+        {(!data || data.length === 0) && (
+          <p className="col-span-full py-8 text-center text-sm text-muted-foreground">Nenhum produtor cadastrado.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ProdutorForm({ initial, onSubmit }: { initial: any; onSubmit: (f: any) => void }) {
+  const [f, setF] = useState({
+    nome: initial?.nome ?? "",
+    bio: initial?.bio ?? "",
+    foto: initial?.foto ?? "",
+    cidade: initial?.cidade ?? "",
+    contato: initial?.contato ?? "",
+    instagram: initial?.instagram ?? "",
+    site: initial?.site ?? "",
+    status: initial?.status ?? "ativo",
+  });
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-3">
+      <div><Label>Nome</Label><Input required value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} /></div>
+      <div><Label>URL da foto</Label><Input value={f.foto} onChange={(e) => setF({ ...f, foto: e.target.value })} placeholder="https://..." /></div>
+      <div><Label>Cidade</Label><Input value={f.cidade} onChange={(e) => setF({ ...f, cidade: e.target.value })} /></div>
+      <div><Label>Bio</Label><Textarea rows={4} value={f.bio} onChange={(e) => setF({ ...f, bio: e.target.value })} /></div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div><Label>Contato</Label><Input value={f.contato} onChange={(e) => setF({ ...f, contato: e.target.value })} placeholder="Email ou telefone" /></div>
+        <div><Label>Instagram</Label><Input value={f.instagram} onChange={(e) => setF({ ...f, instagram: e.target.value })} /></div>
+        <div><Label>Site</Label><Input value={f.site} onChange={(e) => setF({ ...f, site: e.target.value })} /></div>
+      </div>
+      <div>
+        <Label>Status</Label>
+        <select className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={f.status} onChange={(e) => setF({ ...f, status: e.target.value })}>
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+      <Button type="submit" className="w-full bg-fire">Salvar</Button>
+    </form>
+  );
+}
