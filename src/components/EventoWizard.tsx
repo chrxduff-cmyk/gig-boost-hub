@@ -394,6 +394,7 @@ export function EventoWizard({
                 <dd className="font-medium">{fmtBR(f.data_fim_votacao)}</dd>
               </div>
             </dl>
+            </div>
           </div>
           <p className="text-xs text-muted-foreground">
             Confira os dados antes de salvar. Você poderá editar depois pelo painel.
