@@ -16,6 +16,7 @@ export type EventoFormData = {
   data_fim_votacao: string;
   status: "aberto" | "em_votacao" | "encerrado";
   banner_url: string;
+  produtor_id: string;
 };
 
 const MAX_BANNER_BYTES = 5 * 1024 * 1024; // 5MB

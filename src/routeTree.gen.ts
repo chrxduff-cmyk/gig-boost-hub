@@ -15,8 +15,10 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProdutoresIndexRouteImport } from './routes/produtores.index'
 import { Route as EventosIndexRouteImport } from './routes/eventos.index'
 import { Route as BandasIndexRouteImport } from './routes/bandas.index'
+import { Route as ProdutoresIdRouteImport } from './routes/produtores.$id'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as BandasIdRouteImport } from './routes/bandas.$id'
 import { Route as ApoiarBandaIdRouteImport } from './routes/apoiar.$bandaId'
@@ -52,6 +54,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProdutoresIndexRoute = ProdutoresIndexRouteImport.update({
+  id: '/produtores/',
+  path: '/produtores/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventosIndexRoute = EventosIndexRouteImport.update({
   id: '/eventos/',
   path: '/eventos/',
@@ -60,6 +67,11 @@ const EventosIndexRoute = EventosIndexRouteImport.update({
 const BandasIndexRoute = BandasIndexRouteImport.update({
   id: '/bandas/',
   path: '/bandas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProdutoresIdRoute = ProdutoresIdRouteImport.update({
+  id: '/produtores/$id',
+  path: '/produtores/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventosIdRoute = EventosIdRouteImport.update({
@@ -99,8 +111,10 @@ export interface FileRoutesByFullPath {
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/produtores/$id': typeof ProdutoresIdRoute
   '/bandas/': typeof BandasIndexRoute
   '/eventos/': typeof EventosIndexRoute
+  '/produtores/': typeof ProdutoresIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -113,8 +127,10 @@ export interface FileRoutesByTo {
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/produtores/$id': typeof ProdutoresIdRoute
   '/bandas': typeof BandasIndexRoute
   '/eventos': typeof EventosIndexRoute
+  '/produtores': typeof ProdutoresIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -129,8 +145,10 @@ export interface FileRoutesById {
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/produtores/$id': typeof ProdutoresIdRoute
   '/bandas/': typeof BandasIndexRoute
   '/eventos/': typeof EventosIndexRoute
+  '/produtores/': typeof ProdutoresIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -145,8 +163,10 @@ export interface FileRouteTypes {
     | '/apoiar/$bandaId'
     | '/bandas/$id'
     | '/eventos/$id'
+    | '/produtores/$id'
     | '/bandas/'
     | '/eventos/'
+    | '/produtores/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -159,8 +179,10 @@ export interface FileRouteTypes {
     | '/apoiar/$bandaId'
     | '/bandas/$id'
     | '/eventos/$id'
+    | '/produtores/$id'
     | '/bandas'
     | '/eventos'
+    | '/produtores'
   id:
     | '__root__'
     | '/'
@@ -174,8 +196,10 @@ export interface FileRouteTypes {
     | '/apoiar/$bandaId'
     | '/bandas/$id'
     | '/eventos/$id'
+    | '/produtores/$id'
     | '/bandas/'
     | '/eventos/'
+    | '/produtores/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -188,8 +212,10 @@ export interface RootRouteChildren {
   ApoiarBandaIdRoute: typeof ApoiarBandaIdRoute
   BandasIdRoute: typeof BandasIdRoute
   EventosIdRoute: typeof EventosIdRoute
+  ProdutoresIdRoute: typeof ProdutoresIdRoute
   BandasIndexRoute: typeof BandasIndexRoute
   EventosIndexRoute: typeof EventosIndexRoute
+  ProdutoresIndexRoute: typeof ProdutoresIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -236,6 +262,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/produtores/': {
+      id: '/produtores/'
+      path: '/produtores'
+      fullPath: '/produtores/'
+      preLoaderRoute: typeof ProdutoresIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/eventos/': {
       id: '/eventos/'
       path: '/eventos'
@@ -248,6 +281,13 @@ declare module '@tanstack/react-router' {
       path: '/bandas'
       fullPath: '/bandas/'
       preLoaderRoute: typeof BandasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produtores/$id': {
+      id: '/produtores/$id'
+      path: '/produtores/$id'
+      fullPath: '/produtores/$id'
+      preLoaderRoute: typeof ProdutoresIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eventos/$id': {
@@ -311,8 +351,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApoiarBandaIdRoute: ApoiarBandaIdRoute,
   BandasIdRoute: BandasIdRoute,
   EventosIdRoute: EventosIdRoute,
+  ProdutoresIdRoute: ProdutoresIdRoute,
   BandasIndexRoute: BandasIndexRoute,
   EventosIndexRoute: EventosIndexRoute,
+  ProdutoresIndexRoute: ProdutoresIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
