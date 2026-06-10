@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { z } from "zod";
 import { Calendar, Check, ChevronLeft, ChevronRight, Eye, Image as ImageIcon, Info, Loader2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
@@ -7,6 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+
+function useProdutoresList() {
+  const [data, setData] = useState<{ id: string; nome: string }[]>([]);
+  useEffect(() => {
+    supabase.from("produtores").select("id, nome").eq("status", "ativo").order("nome").then(({ data }) => {
+      setData(data ?? []);
+    });
+  }, []);
+  return { data };
+}
 
 export type EventoFormData = {
   nome: string;
@@ -78,7 +88,10 @@ export function EventoWizard({
     data_fim_votacao: fmtLocal(initial?.data_fim_votacao ?? ""),
     status: (initial?.status as EventoFormData["status"]) ?? "aberto",
     banner_url: initial?.banner_url ?? "",
+    produtor_id: (initial as any)?.produtor_id ?? "",
   });
+
+  const { data: produtores } = useProdutoresList();
 
   async function handleBannerFile(file: File | null) {
     if (!file) return;
