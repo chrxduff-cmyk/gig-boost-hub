@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { z } from "zod";
 import { Calendar, Check, ChevronLeft, ChevronRight, Eye, Image as ImageIcon, Info, Loader2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
@@ -8,6 +8,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
+function useProdutoresList() {
+  const [data, setData] = useState<{ id: string; nome: string }[]>([]);
+  useEffect(() => {
+    supabase.from("produtores").select("id, nome").eq("status", "ativo").order("nome").then(({ data }) => {
+      setData(data ?? []);
+    });
+  }, []);
+  return { data };
+}
+
 export type EventoFormData = {
   nome: string;
   descricao: string;
@@ -16,6 +26,7 @@ export type EventoFormData = {
   data_fim_votacao: string;
   status: "aberto" | "em_votacao" | "encerrado";
   banner_url: string;
+  produtor_id: string;
 };
 
 const MAX_BANNER_BYTES = 5 * 1024 * 1024; // 5MB
@@ -77,7 +88,10 @@ export function EventoWizard({
     data_fim_votacao: fmtLocal(initial?.data_fim_votacao ?? ""),
     status: (initial?.status as EventoFormData["status"]) ?? "aberto",
     banner_url: initial?.banner_url ?? "",
+    produtor_id: (initial as any)?.produtor_id ?? "",
   });
+
+  const { data: produtores } = useProdutoresList();
 
   async function handleBannerFile(file: File | null) {
     if (!file) return;
@@ -340,18 +354,34 @@ export function EventoWizard({
               <p className="mt-1 text-xs text-destructive">{errors.data_fim_votacao ?? " "}</p>
             </div>
           </div>
-          <div>
-            <Label htmlFor="status">Status</Label>
-            <select
-              id="status"
-              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              value={f.status}
-              onChange={(e) => update("status", e.target.value as EventoFormData["status"])}
-            >
-              <option value="aberto">Aberto (em breve)</option>
-              <option value="em_votacao">Em votação</option>
-              <option value="encerrado">Encerrado</option>
-            </select>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="status">Status</Label>
+              <select
+                id="status"
+                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={f.status}
+                onChange={(e) => update("status", e.target.value as EventoFormData["status"])}
+              >
+                <option value="aberto">Aberto (em breve)</option>
+                <option value="em_votacao">Em votação</option>
+                <option value="encerrado">Encerrado</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="produtor">Produtor responsável</Label>
+              <select
+                id="produtor"
+                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={f.produtor_id}
+                onChange={(e) => update("produtor_id", e.target.value)}
+              >
+                <option value="">— Nenhum —</option>
+                {produtores.map((p) => (
+                  <option key={p.id} value={p.id}>{p.nome}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       )}

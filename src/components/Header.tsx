@@ -13,6 +13,7 @@ export function Header() {
     { to: "/", label: "Início" },
     { to: "/eventos", label: "Eventos" },
     { to: "/bandas", label: "Bandas" },
+    { to: "/produtores", label: "Produtores" },
     { to: "/ranking", label: "Ranking" },
   ];
 

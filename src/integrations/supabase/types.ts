@@ -65,6 +65,51 @@ export type Database = {
           },
         ]
       }
+      avaliacoes_produtor: {
+        Row: {
+          comentario: string | null
+          created_at: string
+          estrelas: number
+          evento_id: string
+          id: string
+          produtor_id: string
+          user_id: string
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string
+          estrelas: number
+          evento_id: string
+          id?: string
+          produtor_id: string
+          user_id: string
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string
+          estrelas?: number
+          evento_id?: string
+          id?: string
+          produtor_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avaliacoes_produtor_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "avaliacoes_produtor_produtor_id_fkey"
+            columns: ["produtor_id"]
+            isOneToOne: false
+            referencedRelation: "produtores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bandas: {
         Row: {
           cidade: string | null
@@ -117,6 +162,7 @@ export type Database = {
           descricao: string | null
           id: string
           nome: string
+          produtor_id: string | null
           status: string
         }
         Insert: {
@@ -128,6 +174,7 @@ export type Database = {
           descricao?: string | null
           id?: string
           nome: string
+          produtor_id?: string | null
           status?: string
         }
         Update: {
@@ -139,9 +186,18 @@ export type Database = {
           descricao?: string | null
           id?: string
           nome?: string
+          produtor_id?: string | null
           status?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "eventos_produtor_id_fkey"
+            columns: ["produtor_id"]
+            isOneToOne: false
+            referencedRelation: "produtores"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       participacao_evento: {
         Row: {
@@ -187,6 +243,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      produtores: {
+        Row: {
+          bio: string | null
+          cidade: string | null
+          contato: string | null
+          created_at: string
+          foto: string | null
+          id: string
+          instagram: string | null
+          nome: string
+          owner_id: string | null
+          site: string | null
+          status: string
+        }
+        Insert: {
+          bio?: string | null
+          cidade?: string | null
+          contato?: string | null
+          created_at?: string
+          foto?: string | null
+          id?: string
+          instagram?: string | null
+          nome: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+        }
+        Update: {
+          bio?: string | null
+          cidade?: string | null
+          contato?: string | null
+          created_at?: string
+          foto?: string | null
+          id?: string
+          instagram?: string | null
+          nome?: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -245,6 +343,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      pode_avaliar_produtor: {
+        Args: { _evento_id: string; _produtor_id: string; _user_id: string }
         Returns: boolean
       }
     }
