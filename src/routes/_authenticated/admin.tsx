@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EventoWizard } from "@/components/EventoWizard";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — União das Bandas" }] }),
@@ -279,9 +280,9 @@ function EventosTab() {
         <DialogTrigger asChild>
           <Button className="bg-fire"><Plus className="mr-2 h-4 w-4" /> Novo evento</Button>
         </DialogTrigger>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader><DialogTitle>{edit?.id ? "Editar evento" : "Novo evento"}</DialogTitle></DialogHeader>
-          <EventoForm initial={edit} onSubmit={salvar} />
+          <EventoWizard initial={edit} onSubmit={salvar} onCancel={() => { setOpen(false); setEdit(null); }} />
         </DialogContent>
       </Dialog>
 
@@ -305,36 +306,6 @@ function EventosTab() {
   );
 }
 
-function EventoForm({ initial, onSubmit }: { initial: any; onSubmit: (f: any) => void }) {
-  const fmt = (d: string | null | undefined) => d ? new Date(d).toISOString().slice(0, 16) : "";
-  const [f, setF] = useState({
-    nome: initial?.nome ?? "", descricao: initial?.descricao ?? "",
-    data_evento: fmt(initial?.data_evento),
-    data_inicio_votacao: fmt(initial?.data_inicio_votacao),
-    data_fim_votacao: fmt(initial?.data_fim_votacao),
-    status: initial?.status ?? "aberto",
-  });
-  return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-3">
-      <div><Label>Nome</Label><Input required value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} /></div>
-      <div><Label>Descrição</Label><Textarea rows={3} value={f.descricao} onChange={(e) => setF({ ...f, descricao: e.target.value })} /></div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div><Label>Data evento</Label><Input type="datetime-local" value={f.data_evento} onChange={(e) => setF({ ...f, data_evento: e.target.value })} /></div>
-        <div><Label>Início votação</Label><Input type="datetime-local" value={f.data_inicio_votacao} onChange={(e) => setF({ ...f, data_inicio_votacao: e.target.value })} /></div>
-        <div><Label>Fim votação</Label><Input type="datetime-local" value={f.data_fim_votacao} onChange={(e) => setF({ ...f, data_fim_votacao: e.target.value })} /></div>
-      </div>
-      <div>
-        <Label>Status</Label>
-        <select className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={f.status} onChange={(e) => setF({ ...f, status: e.target.value })}>
-          <option value="aberto">aberto</option>
-          <option value="em_votacao">em_votacao</option>
-          <option value="encerrado">encerrado</option>
-        </select>
-      </div>
-      <Button type="submit" className="w-full bg-fire">Salvar</Button>
-    </form>
-  );
-}
 
 function RankingTab() {
   const { data } = useQuery({
