@@ -262,6 +262,7 @@ function EventosTab() {
       data_inicio_votacao: form.data_inicio_votacao || null,
       data_fim_votacao: form.data_fim_votacao || null,
       status: form.status,
+      banner_url: form.banner_url || null,
     };
     const { error } = edit?.id
       ? await supabase.from("eventos").update(payload).eq("id", edit.id)
