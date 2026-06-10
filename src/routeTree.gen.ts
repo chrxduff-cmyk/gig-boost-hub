@@ -9,38 +9,187 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosRouteImport } from './routes/termos'
+import { Route as RankingRouteImport } from './routes/ranking'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EventosIndexRouteImport } from './routes/eventos.index'
+import { Route as BandasIndexRouteImport } from './routes/bandas.index'
+import { Route as EventosIdRouteImport } from './routes/eventos.$id'
+import { Route as BandasIdRouteImport } from './routes/bandas.$id'
+import { Route as ApoiarBandaIdRouteImport } from './routes/apoiar.$bandaId'
 
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RankingRoute = RankingRouteImport.update({
+  id: '/ranking',
+  path: '/ranking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventosIndexRoute = EventosIndexRouteImport.update({
+  id: '/eventos/',
+  path: '/eventos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BandasIndexRoute = BandasIndexRouteImport.update({
+  id: '/bandas/',
+  path: '/bandas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventosIdRoute = EventosIdRouteImport.update({
+  id: '/eventos/$id',
+  path: '/eventos/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BandasIdRoute = BandasIdRouteImport.update({
+  id: '/bandas/$id',
+  path: '/bandas/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApoiarBandaIdRoute = ApoiarBandaIdRouteImport.update({
+  id: '/apoiar/$bandaId',
+  path: '/apoiar/$bandaId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/ranking': typeof RankingRoute
+  '/termos': typeof TermosRoute
+  '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
+  '/bandas/$id': typeof BandasIdRoute
+  '/eventos/$id': typeof EventosIdRoute
+  '/bandas/': typeof BandasIndexRoute
+  '/eventos/': typeof EventosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/ranking': typeof RankingRoute
+  '/termos': typeof TermosRoute
+  '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
+  '/bandas/$id': typeof BandasIdRoute
+  '/eventos/$id': typeof EventosIdRoute
+  '/bandas': typeof BandasIndexRoute
+  '/eventos': typeof EventosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/ranking': typeof RankingRoute
+  '/termos': typeof TermosRoute
+  '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
+  '/bandas/$id': typeof BandasIdRoute
+  '/eventos/$id': typeof EventosIdRoute
+  '/bandas/': typeof BandasIndexRoute
+  '/eventos/': typeof EventosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/privacidade'
+    | '/ranking'
+    | '/termos'
+    | '/apoiar/$bandaId'
+    | '/bandas/$id'
+    | '/eventos/$id'
+    | '/bandas/'
+    | '/eventos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/privacidade'
+    | '/ranking'
+    | '/termos'
+    | '/apoiar/$bandaId'
+    | '/bandas/$id'
+    | '/eventos/$id'
+    | '/bandas'
+    | '/eventos'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/privacidade'
+    | '/ranking'
+    | '/termos'
+    | '/apoiar/$bandaId'
+    | '/bandas/$id'
+    | '/eventos/$id'
+    | '/bandas/'
+    | '/eventos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  RankingRoute: typeof RankingRoute
+  TermosRoute: typeof TermosRoute
+  ApoiarBandaIdRoute: typeof ApoiarBandaIdRoute
+  BandasIdRoute: typeof BandasIdRoute
+  EventosIdRoute: typeof EventosIdRoute
+  BandasIndexRoute: typeof BandasIndexRoute
+  EventosIndexRoute: typeof EventosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ranking': {
+      id: '/ranking'
+      path: '/ranking'
+      fullPath: '/ranking'
+      preLoaderRoute: typeof RankingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +197,66 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/eventos/': {
+      id: '/eventos/'
+      path: '/eventos'
+      fullPath: '/eventos/'
+      preLoaderRoute: typeof EventosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bandas/': {
+      id: '/bandas/'
+      path: '/bandas'
+      fullPath: '/bandas/'
+      preLoaderRoute: typeof BandasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eventos/$id': {
+      id: '/eventos/$id'
+      path: '/eventos/$id'
+      fullPath: '/eventos/$id'
+      preLoaderRoute: typeof EventosIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bandas/$id': {
+      id: '/bandas/$id'
+      path: '/bandas/$id'
+      fullPath: '/bandas/$id'
+      preLoaderRoute: typeof BandasIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apoiar/$bandaId': {
+      id: '/apoiar/$bandaId'
+      path: '/apoiar/$bandaId'
+      fullPath: '/apoiar/$bandaId'
+      preLoaderRoute: typeof ApoiarBandaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
+  RankingRoute: RankingRoute,
+  TermosRoute: TermosRoute,
+  ApoiarBandaIdRoute: ApoiarBandaIdRoute,
+  BandasIdRoute: BandasIdRoute,
+  EventosIdRoute: EventosIdRoute,
+  BandasIndexRoute: BandasIndexRoute,
+  EventosIndexRoute: EventosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
