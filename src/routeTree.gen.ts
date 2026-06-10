@@ -13,12 +13,15 @@ import { Route as TermosRouteImport } from './routes/termos'
 import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EventosIndexRouteImport } from './routes/eventos.index'
 import { Route as BandasIndexRouteImport } from './routes/bandas.index'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as BandasIdRouteImport } from './routes/bandas.$id'
 import { Route as ApoiarBandaIdRouteImport } from './routes/apoiar.$bandaId'
+import { Route as AuthenticatedMinhaBandaRouteImport } from './routes/_authenticated/minha-banda'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -38,6 +41,10 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -70,6 +77,16 @@ const ApoiarBandaIdRoute = ApoiarBandaIdRouteImport.update({
   path: '/apoiar/$bandaId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMinhaBandaRoute = AuthenticatedMinhaBandaRouteImport.update({
+  id: '/minha-banda',
+  path: '/minha-banda',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -77,6 +94,8 @@ export interface FileRoutesByFullPath {
   '/privacidade': typeof PrivacidadeRoute
   '/ranking': typeof RankingRoute
   '/termos': typeof TermosRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/minha-banda': typeof AuthenticatedMinhaBandaRoute
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -89,6 +108,8 @@ export interface FileRoutesByTo {
   '/privacidade': typeof PrivacidadeRoute
   '/ranking': typeof RankingRoute
   '/termos': typeof TermosRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/minha-banda': typeof AuthenticatedMinhaBandaRoute
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -98,10 +119,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/privacidade': typeof PrivacidadeRoute
   '/ranking': typeof RankingRoute
   '/termos': typeof TermosRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/minha-banda': typeof AuthenticatedMinhaBandaRoute
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
   '/eventos/$id': typeof EventosIdRoute
@@ -116,6 +140,8 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/ranking'
     | '/termos'
+    | '/admin'
+    | '/minha-banda'
     | '/apoiar/$bandaId'
     | '/bandas/$id'
     | '/eventos/$id'
@@ -128,6 +154,8 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/ranking'
     | '/termos'
+    | '/admin'
+    | '/minha-banda'
     | '/apoiar/$bandaId'
     | '/bandas/$id'
     | '/eventos/$id'
@@ -136,10 +164,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/auth'
     | '/privacidade'
     | '/ranking'
     | '/termos'
+    | '/_authenticated/admin'
+    | '/_authenticated/minha-banda'
     | '/apoiar/$bandaId'
     | '/bandas/$id'
     | '/eventos/$id'
@@ -149,6 +180,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   RankingRoute: typeof RankingRoute
@@ -188,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -232,11 +271,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApoiarBandaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/minha-banda': {
+      id: '/_authenticated/minha-banda'
+      path: '/minha-banda'
+      fullPath: '/minha-banda'
+      preLoaderRoute: typeof AuthenticatedMinhaBandaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedMinhaBandaRoute: typeof AuthenticatedMinhaBandaRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedMinhaBandaRoute: AuthenticatedMinhaBandaRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   RankingRoute: RankingRoute,
