@@ -66,7 +66,9 @@ export function EventoWizard({
 }) {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const fileRef = useRef<HTMLInputElement>(null);
   const [f, setF] = useState<EventoFormData>({
     nome: initial?.nome ?? "",
     descricao: initial?.descricao ?? "",
@@ -74,7 +76,38 @@ export function EventoWizard({
     data_inicio_votacao: fmtLocal(initial?.data_inicio_votacao ?? ""),
     data_fim_votacao: fmtLocal(initial?.data_fim_votacao ?? ""),
     status: (initial?.status as EventoFormData["status"]) ?? "aberto",
+    banner_url: initial?.banner_url ?? "",
   });
+
+  async function handleBannerFile(file: File | null) {
+    if (!file) return;
+    if (!ALLOWED_BANNER_TYPES.includes(file.type)) {
+      toast.error("Formato inválido. Use JPG, PNG ou WebP.");
+      return;
+    }
+    if (file.size > MAX_BANNER_BYTES) {
+      toast.error("Imagem maior que 5MB.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("event-banners")
+        .upload(path, file, { cacheControl: "3600", upsert: false, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data } = supabase.storage.from("event-banners").getPublicUrl(path);
+      update("banner_url", data.publicUrl);
+      toast.success("Banner enviado!");
+    } catch (err: any) {
+      toast.error(err.message ?? "Falha no upload do banner.");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
 
   const update = <K extends keyof EventoFormData>(k: K, v: EventoFormData[K]) => {
     setF((prev) => ({ ...prev, [k]: v }));
