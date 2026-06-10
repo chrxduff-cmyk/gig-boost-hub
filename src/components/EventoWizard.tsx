@@ -354,18 +354,34 @@ export function EventoWizard({
               <p className="mt-1 text-xs text-destructive">{errors.data_fim_votacao ?? " "}</p>
             </div>
           </div>
-          <div>
-            <Label htmlFor="status">Status</Label>
-            <select
-              id="status"
-              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              value={f.status}
-              onChange={(e) => update("status", e.target.value as EventoFormData["status"])}
-            >
-              <option value="aberto">Aberto (em breve)</option>
-              <option value="em_votacao">Em votação</option>
-              <option value="encerrado">Encerrado</option>
-            </select>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="status">Status</Label>
+              <select
+                id="status"
+                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={f.status}
+                onChange={(e) => update("status", e.target.value as EventoFormData["status"])}
+              >
+                <option value="aberto">Aberto (em breve)</option>
+                <option value="em_votacao">Em votação</option>
+                <option value="encerrado">Encerrado</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="produtor">Produtor responsável</Label>
+              <select
+                id="produtor"
+                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={f.produtor_id}
+                onChange={(e) => update("produtor_id", e.target.value)}
+              >
+                <option value="">— Nenhum —</option>
+                {produtores.map((p) => (
+                  <option key={p.id} value={p.id}>{p.nome}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       )}
