@@ -28,8 +28,14 @@ function EventosList() {
             key={e.id}
             to="/eventos/$id"
             params={{ id: e.id }}
-            className="group rounded-xl border border-border bg-card p-6 transition hover:border-gold/50 hover:shadow-glow"
+            className="group overflow-hidden rounded-xl border border-border bg-card transition hover:border-gold/50 hover:shadow-glow"
           >
+            {e.banner_url && (
+              <div className="aspect-[16/9] overflow-hidden bg-secondary">
+                <img src={e.banner_url} alt={e.nome} className="h-full w-full object-cover transition group-hover:scale-105" />
+              </div>
+            )}
+            <div className="p-6">
             <div className="flex items-center justify-between">
               <Calendar className="h-6 w-6 text-gold" />
               <span className={`rounded-full px-2 py-0.5 text-xs uppercase ${e.status === "aberto" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>

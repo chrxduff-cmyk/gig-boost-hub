@@ -65,6 +65,11 @@ function EventoPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+      {evento.banner_url && (
+        <div className="mb-6 overflow-hidden rounded-2xl border border-border">
+          <img src={evento.banner_url} alt={evento.nome} className="aspect-[16/9] w-full object-cover" />
+        </div>
+      )}
       <div className="rounded-2xl bg-hero p-8 sm:p-12">
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-gold">
           <Calendar className="h-4 w-4" /> Evento
