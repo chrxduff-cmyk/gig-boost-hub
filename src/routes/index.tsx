@@ -90,8 +90,14 @@ function Home() {
                 key={e.id}
                 to="/eventos/$id"
                 params={{ id: e.id }}
-                className="group rounded-xl border border-border bg-card p-6 transition hover:border-gold/50 hover:shadow-glow"
+                className="group overflow-hidden rounded-xl border border-border bg-card transition hover:border-gold/50 hover:shadow-glow"
               >
+                {e.banner_url && (
+                  <div className="aspect-[16/9] overflow-hidden bg-secondary">
+                    <img src={e.banner_url} alt={e.nome} className="h-full w-full object-cover transition group-hover:scale-105" />
+                  </div>
+                )}
+                <div className="p-6">
                 <Calendar className="h-6 w-6 text-gold" />
                 <h3 className="display mt-4 text-2xl group-hover:text-gold">{e.nome}</h3>
                 <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{e.descricao}</p>
@@ -100,6 +106,7 @@ function Home() {
                     {new Date(e.data_evento).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
                   </p>
                 )}
+                </div>
               </Link>
             ))}
           </div>
