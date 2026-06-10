@@ -109,6 +109,7 @@ export type Database = {
       }
       eventos: {
         Row: {
+          banner_url: string | null
           created_at: string
           data_evento: string | null
           data_fim_votacao: string | null
@@ -119,6 +120,7 @@ export type Database = {
           status: string
         }
         Insert: {
+          banner_url?: string | null
           created_at?: string
           data_evento?: string | null
           data_fim_votacao?: string | null
@@ -129,6 +131,7 @@ export type Database = {
           status?: string
         }
         Update: {
+          banner_url?: string | null
           created_at?: string
           data_evento?: string | null
           data_fim_votacao?: string | null
