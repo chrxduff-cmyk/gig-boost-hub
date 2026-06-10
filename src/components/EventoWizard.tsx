@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { z } from "zod";
-import { Calendar, Check, ChevronLeft, ChevronRight, Eye, Info } from "lucide-react";
+import { Calendar, Check, ChevronLeft, ChevronRight, Eye, Image as ImageIcon, Info, Loader2, Upload, X } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +15,12 @@ export type EventoFormData = {
   data_inicio_votacao: string;
   data_fim_votacao: string;
   status: "aberto" | "em_votacao" | "encerrado";
+  banner_url: string;
 };
+
+const MAX_BANNER_BYTES = 5 * 1024 * 1024; // 5MB
+const ALLOWED_BANNER_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
 
 const step1Schema = z.object({
   nome: z.string().trim().min(3, "Nome deve ter ao menos 3 caracteres").max(120, "Máx. 120 caracteres"),
@@ -59,7 +66,9 @@ export function EventoWizard({
 }) {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const fileRef = useRef<HTMLInputElement>(null);
   const [f, setF] = useState<EventoFormData>({
     nome: initial?.nome ?? "",
     descricao: initial?.descricao ?? "",
@@ -67,7 +76,38 @@ export function EventoWizard({
     data_inicio_votacao: fmtLocal(initial?.data_inicio_votacao ?? ""),
     data_fim_votacao: fmtLocal(initial?.data_fim_votacao ?? ""),
     status: (initial?.status as EventoFormData["status"]) ?? "aberto",
+    banner_url: initial?.banner_url ?? "",
   });
+
+  async function handleBannerFile(file: File | null) {
+    if (!file) return;
+    if (!ALLOWED_BANNER_TYPES.includes(file.type)) {
+      toast.error("Formato inválido. Use JPG, PNG ou WebP.");
+      return;
+    }
+    if (file.size > MAX_BANNER_BYTES) {
+      toast.error("Imagem maior que 5MB.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("event-banners")
+        .upload(path, file, { cacheControl: "3600", upsert: false, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data } = supabase.storage.from("event-banners").getPublicUrl(path);
+      update("banner_url", data.publicUrl);
+      toast.success("Banner enviado!");
+    } catch (err: any) {
+      toast.error(err.message ?? "Falha no upload do banner.");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
 
   const update = <K extends keyof EventoFormData>(k: K, v: EventoFormData[K]) => {
     setF((prev) => ({ ...prev, [k]: v }));
@@ -157,6 +197,69 @@ export function EventoWizard({
       {/* Step 1 */}
       {step === 1 && (
         <div className="space-y-4">
+          <div>
+            <Label>Banner / capa do evento</Label>
+            <div className="mt-2 overflow-hidden rounded-lg border border-dashed border-border bg-card">
+              {f.banner_url ? (
+                <div className="relative">
+                  <img
+                    src={f.banner_url}
+                    alt="Banner do evento"
+                    className="aspect-[16/9] w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => update("banner_url", "")}
+                    className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-md bg-background/90 px-2 py-1 text-xs shadow hover:bg-background"
+                    aria-label="Remover banner"
+                  >
+                    <X className="h-3 w-3" /> Remover
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                  className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-2 text-muted-foreground transition hover:bg-secondary/40 disabled:opacity-60"
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                      <span className="text-sm">Enviando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ImageIcon className="h-8 w-8 opacity-60" />
+                      <span className="text-sm">Clique para enviar uma imagem</span>
+                      <span className="text-xs">JPG, PNG ou WebP · até 5MB · 16:9 recomendado</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+            {f.banner_url && (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="mt-2"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+              >
+                {uploading ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <Upload className="mr-2 h-3 w-3" />}
+                Trocar imagem
+              </Button>
+            )}
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={(e) => handleBannerFile(e.target.files?.[0] ?? null)}
+            />
+          </div>
+
           <div>
             <Label htmlFor="nome">
               Nome do evento <span className="text-fire">*</span>
@@ -256,11 +359,20 @@ export function EventoWizard({
       {/* Step 3 — Preview */}
       {step === 3 && (
         <div className="space-y-4">
-          <div className="rounded-xl border border-border bg-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Pré-visualização do evento
-            </p>
-            <h3 className="display mt-2 text-2xl">{f.nome || "Sem nome"}</h3>
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
+            {f.banner_url ? (
+              <img src={f.banner_url} alt={f.nome} className="aspect-[16/9] w-full object-cover" />
+            ) : (
+              <div className="flex aspect-[16/9] w-full items-center justify-center bg-secondary/30 text-muted-foreground">
+                <ImageIcon className="h-10 w-10 opacity-40" />
+              </div>
+            )}
+            <div className="p-5">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                Pré-visualização do evento
+              </p>
+              <h3 className="display mt-2 text-2xl">{f.nome || "Sem nome"}</h3>
+
             <p className="mt-2 whitespace-pre-line text-sm text-muted-foreground">
               {f.descricao || "Sem descrição."}
             </p>
@@ -282,6 +394,7 @@ export function EventoWizard({
                 <dd className="font-medium">{fmtBR(f.data_fim_votacao)}</dd>
               </div>
             </dl>
+            </div>
           </div>
           <p className="text-xs text-muted-foreground">
             Confira os dados antes de salvar. Você poderá editar depois pelo painel.
