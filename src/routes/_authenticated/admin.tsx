@@ -280,9 +280,9 @@ function EventosTab() {
         <DialogTrigger asChild>
           <Button className="bg-fire"><Plus className="mr-2 h-4 w-4" /> Novo evento</Button>
         </DialogTrigger>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader><DialogTitle>{edit?.id ? "Editar evento" : "Novo evento"}</DialogTitle></DialogHeader>
-          <EventoForm initial={edit} onSubmit={salvar} />
+          <EventoWizard initial={edit} onSubmit={salvar} onCancel={() => { setOpen(false); setEdit(null); }} />
         </DialogContent>
       </Dialog>
 
