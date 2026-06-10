@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { z } from "zod";
-import { Calendar, Check, ChevronLeft, ChevronRight, Eye, Info } from "lucide-react";
+import { Calendar, Check, ChevronLeft, ChevronRight, Eye, Image as ImageIcon, Info, Loader2, Upload, X } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +15,12 @@ export type EventoFormData = {
   data_inicio_votacao: string;
   data_fim_votacao: string;
   status: "aberto" | "em_votacao" | "encerrado";
+  banner_url: string;
 };
+
+const MAX_BANNER_BYTES = 5 * 1024 * 1024; // 5MB
+const ALLOWED_BANNER_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
 
 const step1Schema = z.object({
   nome: z.string().trim().min(3, "Nome deve ter ao menos 3 caracteres").max(120, "Máx. 120 caracteres"),
