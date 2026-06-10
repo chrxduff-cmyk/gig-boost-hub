@@ -359,11 +359,20 @@ export function EventoWizard({
       {/* Step 3 — Preview */}
       {step === 3 && (
         <div className="space-y-4">
-          <div className="rounded-xl border border-border bg-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">
-              Pré-visualização do evento
-            </p>
-            <h3 className="display mt-2 text-2xl">{f.nome || "Sem nome"}</h3>
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
+            {f.banner_url ? (
+              <img src={f.banner_url} alt={f.nome} className="aspect-[16/9] w-full object-cover" />
+            ) : (
+              <div className="flex aspect-[16/9] w-full items-center justify-center bg-secondary/30 text-muted-foreground">
+                <ImageIcon className="h-10 w-10 opacity-40" />
+              </div>
+            )}
+            <div className="p-5">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                Pré-visualização do evento
+              </p>
+              <h3 className="display mt-2 text-2xl">{f.nome || "Sem nome"}</h3>
+
             <p className="mt-2 whitespace-pre-line text-sm text-muted-foreground">
               {f.descricao || "Sem descrição."}
             </p>
