@@ -438,3 +438,84 @@ function ProdutorForm({ initial, onSubmit }: { initial: any; onSubmit: (f: any) 
     </form>
   );
 }
+
+function PixTab() {
+  const qc = useQueryClient();
+  const { user } = useAuth();
+  const { data, isLoading } = useQuery({
+    queryKey: ["config-pix-admin"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("configuracoes_pix")
+        .select("id, chave, nome_recebedor, cidade, updated_at")
+        .maybeSingle();
+      return data;
+    },
+  });
+  const [form, setForm] = useState({ chave: "", nome_recebedor: "", cidade: "" });
+  const [hydrated, setHydrated] = useState(false);
+  if (data && !hydrated) {
+    setForm({ chave: data.chave, nome_recebedor: data.nome_recebedor, cidade: data.cidade });
+    setHydrated(true);
+  }
+
+  async function salvar(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.chave.trim() || !form.nome_recebedor.trim() || !form.cidade.trim()) {
+      toast.error("Preencha todos os campos.");
+      return;
+    }
+    const payload = {
+      chave: form.chave.trim(),
+      nome_recebedor: form.nome_recebedor.trim(),
+      cidade: form.cidade.trim(),
+      updated_at: new Date().toISOString(),
+      updated_by: user?.id ?? null,
+    };
+    const { error } = data?.id
+      ? await supabase.from("configuracoes_pix").update(payload).eq("id", data.id)
+      : await supabase.from("configuracoes_pix").insert(payload);
+    if (error) { toast.error("Erro: " + error.message); return; }
+    toast.success("Conta PIX atualizada.");
+    qc.invalidateQueries({ queryKey: ["config-pix-admin"] });
+    qc.invalidateQueries({ queryKey: ["config-pix"] });
+  }
+
+  if (isLoading) return <p className="mt-6 text-muted-foreground">Carregando...</p>;
+
+  return (
+    <div className="mt-6 max-w-xl">
+      <div className="rounded-xl border border-border bg-card p-6">
+        <div className="flex items-center gap-2">
+          <KeyRound className="h-5 w-5 text-gold" />
+          <h2 className="display text-xl">Conta PIX dos apoios</h2>
+        </div>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Esta chave é usada para gerar o QR Code e o código copia-e-cola na tela de apoio às bandas.
+        </p>
+        <form onSubmit={salvar} className="mt-6 space-y-4">
+          <div>
+            <Label>Chave PIX</Label>
+            <Input value={form.chave} onChange={(e) => setForm({ ...form, chave: e.target.value })} placeholder="email, CPF/CNPJ, telefone ou aleatória" />
+          </div>
+          <div>
+            <Label>Nome do recebedor</Label>
+            <Input value={form.nome_recebedor} onChange={(e) => setForm({ ...form, nome_recebedor: e.target.value })} maxLength={25} />
+            <p className="mt-1 text-xs text-muted-foreground">Máx. 25 caracteres (padrão PIX).</p>
+          </div>
+          <div>
+            <Label>Cidade</Label>
+            <Input value={form.cidade} onChange={(e) => setForm({ ...form, cidade: e.target.value })} maxLength={15} />
+            <p className="mt-1 text-xs text-muted-foreground">Máx. 15 caracteres (padrão PIX).</p>
+          </div>
+          <Button type="submit" className="bg-fire">Salvar</Button>
+          {data?.updated_at && (
+            <p className="text-xs text-muted-foreground">
+              Última atualização: {new Date(data.updated_at).toLocaleString("pt-BR")}
+            </p>
+          )}
+        </form>
+      </div>
+    </div>
+  );
+}
