@@ -35,11 +35,23 @@ function ApoiarPage() {
     },
   });
 
+  const { data: pixConfig } = useQuery({
+    queryKey: ["config-pix"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("configuracoes_pix")
+        .select("chave, nome_recebedor, cidade")
+        .maybeSingle();
+      return data ?? { chave: "pix@uniaodasbandas.com", nome_recebedor: "UDB", cidade: "BRASIL" };
+    },
+  });
+
   function gerar(e: React.FormEvent) {
     e.preventDefault();
     if (!nome.trim()) { toast.error("Informe seu nome."); return; }
     if (valor < 10) { toast.error("O valor mínimo é R$ 10."); return; }
-    setPix(gerarPixSimulado(banda?.nome ?? "", valor));
+    if (!pixConfig) { toast.error("Configuração PIX indisponível."); return; }
+    setPix(gerarPixSimulado(banda?.nome ?? "", valor, pixConfig));
   }
 
   async function confirmar() {

@@ -152,6 +152,36 @@ export type Database = {
         }
         Relationships: []
       }
+      configuracoes_pix: {
+        Row: {
+          chave: string
+          cidade: string
+          id: string
+          nome_recebedor: string
+          singleton: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          chave: string
+          cidade: string
+          id?: string
+          nome_recebedor: string
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          chave?: string
+          cidade?: string
+          id?: string
+          nome_recebedor?: string
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       eventos: {
         Row: {
           banner_url: string | null
