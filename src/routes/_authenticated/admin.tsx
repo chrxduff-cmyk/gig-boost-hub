@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Download, Check, X, Music2, Calendar, Users, DollarSign, UserCircle2, KeyRound } from "lucide-react";
+import { Plus, Download, Check, X, Music2, Calendar, Users, DollarSign, UserCircle2, KeyRound, Trash2, ListPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import { EventoWizard } from "@/components/EventoWizard";
+import { ImageUploadField } from "@/components/ImageUploadField";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — União das Bandas" }] }),
@@ -198,6 +201,12 @@ function BandasTab() {
     else { toast.success("Banda salva."); setOpen(false); setEdit(null); qc.invalidateQueries(); }
   }
 
+  async function excluir(id: string) {
+    const { error } = await supabase.from("bandas").delete().eq("id", id);
+    if (error) toast.error("Não foi possível excluir: " + error.message);
+    else { toast.success("Banda excluída."); qc.invalidateQueries(); }
+  }
+
   return (
     <div className="mt-6">
       <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setEdit(null); }}>
@@ -221,6 +230,11 @@ function BandasTab() {
               <p className="truncate text-xs text-muted-foreground">{b.cidade} · {b.status}</p>
             </div>
             <Button size="sm" variant="outline" onClick={() => { setEdit(b); setOpen(true); }}>Editar</Button>
+            <DeleteButton
+              label={`Excluir banda "${b.nome}"`}
+              description="Todos os apoios e participações vinculados também serão removidos."
+              onConfirm={() => excluir(b.id)}
+            />
           </div>
         ))}
       </div>
@@ -237,7 +251,7 @@ function BandaForm({ initial, onSubmit }: { initial: any; onSubmit: (f: any) => 
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-3">
       <div><Label>Nome</Label><Input required value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} /></div>
-      <div><Label>URL da foto</Label><Input value={f.foto} onChange={(e) => setF({ ...f, foto: e.target.value })} placeholder="https://..." /></div>
+      <ImageUploadField label="Logo da banda" bucket="band-logos" value={f.foto} onChange={(url) => setF({ ...f, foto: url })} />
       <div><Label>Cidade</Label><Input value={f.cidade} onChange={(e) => setF({ ...f, cidade: e.target.value })} /></div>
       <div><Label>Release</Label><Textarea rows={4} value={f.release} onChange={(e) => setF({ ...f, release: e.target.value })} /></div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -250,6 +264,30 @@ function BandaForm({ initial, onSubmit }: { initial: any; onSubmit: (f: any) => 
   );
 }
 
+function DeleteButton({ label, description, onConfirm }: { label: string; description?: string; onConfirm: () => void | Promise<void> }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button size="sm" variant="outline" className="text-destructive hover:bg-destructive/10" aria-label={label}>
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{label}?</AlertDialogTitle>
+          {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={() => onConfirm()} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            Excluir
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
 function EventosTab() {
   const qc = useQueryClient();
   const { data } = useQuery({
@@ -258,6 +296,7 @@ function EventosTab() {
   });
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState<any>(null);
+  const [addBandasFor, setAddBandasFor] = useState<any>(null);
 
   async function salvar(form: any) {
     const payload = {
@@ -279,6 +318,11 @@ function EventosTab() {
     const { error } = await supabase.from("eventos").update({ status: "encerrado" }).eq("id", id);
     if (error) toast.error(error.message); else { toast.success("Votação encerrada."); qc.invalidateQueries(); }
   }
+  async function excluir(id: string) {
+    const { error } = await supabase.from("eventos").delete().eq("id", id);
+    if (error) toast.error("Não foi possível excluir: " + error.message);
+    else { toast.success("Evento excluído."); qc.invalidateQueries(); }
+  }
 
   return (
     <div className="mt-6">
@@ -292,21 +336,99 @@ function EventosTab() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={!!addBandasFor} onOpenChange={(o) => { if (!o) setAddBandasFor(null); }}>
+        <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
+          <DialogHeader><DialogTitle>Adicionar bandas — {addBandasFor?.nome}</DialogTitle></DialogHeader>
+          {addBandasFor && (
+            <AdicionarBandasEvento evento={addBandasFor} onDone={() => { setAddBandasFor(null); qc.invalidateQueries(); }} />
+          )}
+        </DialogContent>
+      </Dialog>
+
       <div className="mt-4 space-y-3">
         {(data ?? []).map((e) => (
-          <div key={e.id} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card p-4">
+          <div key={e.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-4">
             <div className="min-w-0">
               <p className="display text-lg">{e.nome}</p>
               <p className="text-xs text-muted-foreground">
-                {e.data_evento ? new Date(e.data_evento).toLocaleDateString("pt-BR") : "Sem data"} · {e.status}
+                {e.data_evento ? new Date(e.data_evento).toLocaleString("pt-BR") : "Sem data"} · {e.status}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" onClick={() => setAddBandasFor(e)}>
+                <ListPlus className="mr-1 h-4 w-4" /> Adicionar bandas
+              </Button>
               {e.status !== "encerrado" && <Button size="sm" variant="outline" onClick={() => encerrar(e.id)}>Encerrar</Button>}
               <Button size="sm" variant="outline" onClick={() => { setEdit(e); setOpen(true); }}>Editar</Button>
+              <DeleteButton
+                label={`Excluir evento "${e.nome}"`}
+                description="Apoios e participações vinculados a este evento serão removidos."
+                onConfirm={() => excluir(e.id)}
+              />
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function AdicionarBandasEvento({ evento, onDone }: { evento: any; onDone: () => void }) {
+  const { data: bandas } = useQuery({
+    queryKey: ["admin-bandas-select"],
+    queryFn: async () => (await supabase.from("bandas").select("id, nome, cidade").order("nome")).data ?? [],
+  });
+  const { data: jaVinculadas } = useQuery({
+    queryKey: ["pe-vinculadas", evento.id],
+    queryFn: async () => {
+      const { data } = await supabase.from("participacao_evento").select("banda_id").eq("evento_id", evento.id);
+      return new Set((data ?? []).map((p) => p.banda_id));
+    },
+  });
+  const [sel, setSel] = useState<Set<string>>(new Set());
+  const [busy, setBusy] = useState(false);
+
+  function toggle(id: string) {
+    const n = new Set(sel);
+    n.has(id) ? n.delete(id) : n.add(id);
+    setSel(n);
+  }
+
+  async function salvar() {
+    if (sel.size === 0) { toast.error("Selecione ao menos uma banda."); return; }
+    setBusy(true);
+    const rows = Array.from(sel).map((banda_id) => ({ evento_id: evento.id, banda_id, pontos: 0 }));
+    const { error } = await supabase.from("participacao_evento").insert(rows);
+    setBusy(false);
+    if (error) { toast.error("Erro: " + error.message); return; }
+    toast.success(`${rows.length} banda(s) adicionada(s).`);
+    onDone();
+  }
+
+  const disponiveis = (bandas ?? []).filter((b) => !jaVinculadas?.has(b.id));
+
+  return (
+    <div className="space-y-3">
+      {disponiveis.length === 0 ? (
+        <p className="py-6 text-center text-sm text-muted-foreground">Todas as bandas já estão neste evento.</p>
+      ) : (
+        <div className="max-h-80 space-y-1 overflow-y-auto rounded border border-border p-2">
+          {disponiveis.map((b) => (
+            <label key={b.id} className="flex cursor-pointer items-center gap-3 rounded p-2 hover:bg-secondary">
+              <Checkbox checked={sel.has(b.id)} onCheckedChange={() => toggle(b.id)} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm">{b.nome}</p>
+                <p className="truncate text-xs text-muted-foreground">{b.cidade ?? "—"}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      )}
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={onDone}>Cancelar</Button>
+        <Button className="bg-fire" disabled={busy || sel.size === 0} onClick={salvar}>
+          Adicionar {sel.size > 0 ? `(${sel.size})` : ""}
+        </Button>
       </div>
     </div>
   );
@@ -371,6 +493,11 @@ function ProdutoresTab() {
     if (error) toast.error(error.message);
     else { toast.success("Produtor salvo."); setOpen(false); setEdit(null); qc.invalidateQueries(); }
   }
+  async function excluir(id: string) {
+    const { error } = await supabase.from("produtores").delete().eq("id", id);
+    if (error) toast.error("Não foi possível excluir: " + error.message);
+    else { toast.success("Produtor excluído."); qc.invalidateQueries(); }
+  }
 
   return (
     <div className="mt-6">
@@ -395,6 +522,11 @@ function ProdutoresTab() {
               <p className="truncate text-xs text-muted-foreground">{p.cidade ?? "—"} · {p.status}</p>
             </div>
             <Button size="sm" variant="outline" onClick={() => { setEdit(p); setOpen(true); }}>Editar</Button>
+            <DeleteButton
+              label={`Excluir produtor "${p.nome}"`}
+              description="Eventos vinculados perderão a referência ao produtor."
+              onConfirm={() => excluir(p.id)}
+            />
           </div>
         ))}
         {(!data || data.length === 0) && (

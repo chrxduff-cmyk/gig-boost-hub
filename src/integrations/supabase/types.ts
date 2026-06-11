@@ -379,6 +379,7 @@ export type Database = {
         Args: { _evento_id: string; _produtor_id: string; _user_id: string }
         Returns: boolean
       }
+      votacao_esta_aberta: { Args: { _evento_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "banda" | "publico"
