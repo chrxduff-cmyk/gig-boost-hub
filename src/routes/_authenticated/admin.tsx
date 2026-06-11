@@ -493,6 +493,11 @@ function ProdutoresTab() {
     if (error) toast.error(error.message);
     else { toast.success("Produtor salvo."); setOpen(false); setEdit(null); qc.invalidateQueries(); }
   }
+  async function excluir(id: string) {
+    const { error } = await supabase.from("produtores").delete().eq("id", id);
+    if (error) toast.error("Não foi possível excluir: " + error.message);
+    else { toast.success("Produtor excluído."); qc.invalidateQueries(); }
+  }
 
   return (
     <div className="mt-6">
@@ -517,6 +522,11 @@ function ProdutoresTab() {
               <p className="truncate text-xs text-muted-foreground">{p.cidade ?? "—"} · {p.status}</p>
             </div>
             <Button size="sm" variant="outline" onClick={() => { setEdit(p); setOpen(true); }}>Editar</Button>
+            <DeleteButton
+              label={`Excluir produtor "${p.nome}"`}
+              description="Eventos vinculados perderão a referência ao produtor."
+              onConfirm={() => excluir(p.id)}
+            />
           </div>
         ))}
         {(!data || data.length === 0) && (
