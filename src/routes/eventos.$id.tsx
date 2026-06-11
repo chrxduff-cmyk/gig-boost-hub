@@ -59,7 +59,10 @@ function EventoPage() {
     return () => { supabase.removeChannel(ch); };
   }, [id, refetch]);
 
-  const countdown = useCountdown(evento?.data_fim_votacao);
+  const fimVotacao = evento?.data_evento
+    ? new Date(new Date(evento.data_evento).getTime() + 12 * 60 * 60 * 1000).toISOString()
+    : evento?.data_fim_votacao;
+  const countdown = useCountdown(fimVotacao);
 
   if (!evento) return <div className="p-12 text-center text-muted-foreground">Carregando...</div>;
 
