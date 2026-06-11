@@ -201,6 +201,12 @@ function BandasTab() {
     else { toast.success("Banda salva."); setOpen(false); setEdit(null); qc.invalidateQueries(); }
   }
 
+  async function excluir(id: string) {
+    const { error } = await supabase.from("bandas").delete().eq("id", id);
+    if (error) toast.error("Não foi possível excluir: " + error.message);
+    else { toast.success("Banda excluída."); qc.invalidateQueries(); }
+  }
+
   return (
     <div className="mt-6">
       <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setEdit(null); }}>
@@ -224,6 +230,11 @@ function BandasTab() {
               <p className="truncate text-xs text-muted-foreground">{b.cidade} · {b.status}</p>
             </div>
             <Button size="sm" variant="outline" onClick={() => { setEdit(b); setOpen(true); }}>Editar</Button>
+            <DeleteButton
+              label={`Excluir banda "${b.nome}"`}
+              description="Todos os apoios e participações vinculados também serão removidos."
+              onConfirm={() => excluir(b.id)}
+            />
           </div>
         ))}
       </div>
@@ -240,7 +251,7 @@ function BandaForm({ initial, onSubmit }: { initial: any; onSubmit: (f: any) => 
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-3">
       <div><Label>Nome</Label><Input required value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} /></div>
-      <div><Label>URL da foto</Label><Input value={f.foto} onChange={(e) => setF({ ...f, foto: e.target.value })} placeholder="https://..." /></div>
+      <ImageUploadField label="Logo da banda" bucket="band-logos" value={f.foto} onChange={(url) => setF({ ...f, foto: url })} />
       <div><Label>Cidade</Label><Input value={f.cidade} onChange={(e) => setF({ ...f, cidade: e.target.value })} /></div>
       <div><Label>Release</Label><Textarea rows={4} value={f.release} onChange={(e) => setF({ ...f, release: e.target.value })} /></div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -253,7 +264,29 @@ function BandaForm({ initial, onSubmit }: { initial: any; onSubmit: (f: any) => 
   );
 }
 
-function EventosTab() {
+function DeleteButton({ label, description, onConfirm }: { label: string; description?: string; onConfirm: () => void | Promise<void> }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button size="sm" variant="outline" className="text-destructive hover:bg-destructive/10" aria-label={label}>
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{label}?</AlertDialogTitle>
+          {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={() => onConfirm()} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            Excluir
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
   const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["admin-eventos"],
