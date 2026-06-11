@@ -287,6 +287,8 @@ function DeleteButton({ label, description, onConfirm }: { label: string; descri
     </AlertDialog>
   );
 }
+
+function EventosTab() {
   const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["admin-eventos"],
@@ -294,6 +296,7 @@ function DeleteButton({ label, description, onConfirm }: { label: string; descri
   });
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState<any>(null);
+  const [addBandasFor, setAddBandasFor] = useState<any>(null);
 
   async function salvar(form: any) {
     const payload = {
@@ -315,6 +318,11 @@ function DeleteButton({ label, description, onConfirm }: { label: string; descri
     const { error } = await supabase.from("eventos").update({ status: "encerrado" }).eq("id", id);
     if (error) toast.error(error.message); else { toast.success("Votação encerrada."); qc.invalidateQueries(); }
   }
+  async function excluir(id: string) {
+    const { error } = await supabase.from("eventos").delete().eq("id", id);
+    if (error) toast.error("Não foi possível excluir: " + error.message);
+    else { toast.success("Evento excluído."); qc.invalidateQueries(); }
+  }
 
   return (
     <div className="mt-6">
@@ -328,21 +336,99 @@ function DeleteButton({ label, description, onConfirm }: { label: string; descri
         </DialogContent>
       </Dialog>
 
+      <Dialog open={!!addBandasFor} onOpenChange={(o) => { if (!o) setAddBandasFor(null); }}>
+        <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
+          <DialogHeader><DialogTitle>Adicionar bandas — {addBandasFor?.nome}</DialogTitle></DialogHeader>
+          {addBandasFor && (
+            <AdicionarBandasEvento evento={addBandasFor} onDone={() => { setAddBandasFor(null); qc.invalidateQueries(); }} />
+          )}
+        </DialogContent>
+      </Dialog>
+
       <div className="mt-4 space-y-3">
         {(data ?? []).map((e) => (
-          <div key={e.id} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card p-4">
+          <div key={e.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-4">
             <div className="min-w-0">
               <p className="display text-lg">{e.nome}</p>
               <p className="text-xs text-muted-foreground">
-                {e.data_evento ? new Date(e.data_evento).toLocaleDateString("pt-BR") : "Sem data"} · {e.status}
+                {e.data_evento ? new Date(e.data_evento).toLocaleString("pt-BR") : "Sem data"} · {e.status}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" onClick={() => setAddBandasFor(e)}>
+                <ListPlus className="mr-1 h-4 w-4" /> Adicionar bandas
+              </Button>
               {e.status !== "encerrado" && <Button size="sm" variant="outline" onClick={() => encerrar(e.id)}>Encerrar</Button>}
               <Button size="sm" variant="outline" onClick={() => { setEdit(e); setOpen(true); }}>Editar</Button>
+              <DeleteButton
+                label={`Excluir evento "${e.nome}"`}
+                description="Apoios e participações vinculados a este evento serão removidos."
+                onConfirm={() => excluir(e.id)}
+              />
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function AdicionarBandasEvento({ evento, onDone }: { evento: any; onDone: () => void }) {
+  const { data: bandas } = useQuery({
+    queryKey: ["admin-bandas-select"],
+    queryFn: async () => (await supabase.from("bandas").select("id, nome, cidade").order("nome")).data ?? [],
+  });
+  const { data: jaVinculadas } = useQuery({
+    queryKey: ["pe-vinculadas", evento.id],
+    queryFn: async () => {
+      const { data } = await supabase.from("participacao_evento").select("banda_id").eq("evento_id", evento.id);
+      return new Set((data ?? []).map((p) => p.banda_id));
+    },
+  });
+  const [sel, setSel] = useState<Set<string>>(new Set());
+  const [busy, setBusy] = useState(false);
+
+  function toggle(id: string) {
+    const n = new Set(sel);
+    n.has(id) ? n.delete(id) : n.add(id);
+    setSel(n);
+  }
+
+  async function salvar() {
+    if (sel.size === 0) { toast.error("Selecione ao menos uma banda."); return; }
+    setBusy(true);
+    const rows = Array.from(sel).map((banda_id) => ({ evento_id: evento.id, banda_id, pontos: 0 }));
+    const { error } = await supabase.from("participacao_evento").insert(rows);
+    setBusy(false);
+    if (error) { toast.error("Erro: " + error.message); return; }
+    toast.success(`${rows.length} banda(s) adicionada(s).`);
+    onDone();
+  }
+
+  const disponiveis = (bandas ?? []).filter((b) => !jaVinculadas?.has(b.id));
+
+  return (
+    <div className="space-y-3">
+      {disponiveis.length === 0 ? (
+        <p className="py-6 text-center text-sm text-muted-foreground">Todas as bandas já estão neste evento.</p>
+      ) : (
+        <div className="max-h-80 space-y-1 overflow-y-auto rounded border border-border p-2">
+          {disponiveis.map((b) => (
+            <label key={b.id} className="flex cursor-pointer items-center gap-3 rounded p-2 hover:bg-secondary">
+              <Checkbox checked={sel.has(b.id)} onCheckedChange={() => toggle(b.id)} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm">{b.nome}</p>
+                <p className="truncate text-xs text-muted-foreground">{b.cidade ?? "—"}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      )}
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={onDone}>Cancelar</Button>
+        <Button className="bg-fire" disabled={busy || sel.size === 0} onClick={salvar}>
+          Adicionar {sel.size > 0 ? `(${sel.size})` : ""}
+        </Button>
       </div>
     </div>
   );
