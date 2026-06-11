@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Download, Check, X, Music2, Calendar, Users, DollarSign, UserCircle2 } from "lucide-react";
+import { Plus, Download, Check, X, Music2, Calendar, Users, DollarSign, UserCircle2, KeyRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
