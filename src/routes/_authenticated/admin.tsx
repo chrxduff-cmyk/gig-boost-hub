@@ -39,12 +39,14 @@ function AdminPage() {
           <TabsTrigger value="produtores">Produtores</TabsTrigger>
           <TabsTrigger value="eventos">Eventos</TabsTrigger>
           <TabsTrigger value="ranking">Ranking</TabsTrigger>
+          <TabsTrigger value="pix"><KeyRound className="mr-1 h-3.5 w-3.5" />PIX</TabsTrigger>
         </TabsList>
         <TabsContent value="apoios"><ApoiosTab /></TabsContent>
         <TabsContent value="bandas"><BandasTab /></TabsContent>
         <TabsContent value="produtores"><ProdutoresTab /></TabsContent>
         <TabsContent value="eventos"><EventosTab /></TabsContent>
         <TabsContent value="ranking"><RankingTab /></TabsContent>
+        <TabsContent value="pix"><PixTab /></TabsContent>
       </Tabs>
     </div>
   );
