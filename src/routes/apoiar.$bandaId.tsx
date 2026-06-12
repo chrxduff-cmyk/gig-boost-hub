@@ -38,13 +38,12 @@ function ApoiarPage() {
   const { data: pixConfig } = useQuery({
     queryKey: ["config-pix"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("configuracoes_pix")
-        .select("chave, nome_recebedor, cidade")
-        .maybeSingle();
-      return data ?? { chave: "pix@uniaodasbandas.com", nome_recebedor: "UDB", cidade: "BRASIL" };
+      const { data } = await supabase.rpc("get_pix_config_public");
+      const row = Array.isArray(data) ? data[0] : data;
+      return row ?? { chave: "pix@uniaodasbandas.com", nome_recebedor: "UDB", cidade: "BRASIL" };
     },
   });
+
 
   function gerar(e: React.FormEvent) {
     e.preventDefault();
@@ -56,6 +55,7 @@ function ApoiarPage() {
 
   async function confirmar() {
     if (!pix || !banda) return;
+    const { data: sessionData } = await supabase.auth.getUser();
     const { error } = await supabase.from("apoios").insert({
       banda_id: banda.id,
       evento_id: evento ?? null,
@@ -64,8 +64,10 @@ function ApoiarPage() {
       txid: pix.txid,
       pontos: 0,
       status: "pendente",
+      user_id: sessionData.user?.id ?? null,
     });
     if (error) { toast.error("Não foi possível registrar: " + error.message); return; }
+
     setEnviado(true);
     toast.success("Apoio registrado! Aguardando confirmação do administrador.");
   }
