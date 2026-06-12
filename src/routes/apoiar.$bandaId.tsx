@@ -55,6 +55,7 @@ function ApoiarPage() {
 
   async function confirmar() {
     if (!pix || !banda) return;
+    const { data: sessionData } = await supabase.auth.getUser();
     const { error } = await supabase.from("apoios").insert({
       banda_id: banda.id,
       evento_id: evento ?? null,
@@ -63,8 +64,10 @@ function ApoiarPage() {
       txid: pix.txid,
       pontos: 0,
       status: "pendente",
+      user_id: sessionData.user?.id ?? null,
     });
     if (error) { toast.error("Não foi possível registrar: " + error.message); return; }
+
     setEnviado(true);
     toast.success("Apoio registrado! Aguardando confirmação do administrador.");
   }
