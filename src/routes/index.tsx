@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Flame, Trophy, Calendar, ArrowRight, Music2 } from "lucide-react";
+import { Flame, Trophy, Calendar, ArrowRight, Music2, Percent, CreditCard, Wallet, Radio } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
