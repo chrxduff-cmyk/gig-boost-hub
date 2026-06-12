@@ -55,8 +55,6 @@ function ProdutorPage() {
     queryKey: ["produtor-elegivel", id, user?.id],
     enabled: !!user?.id,
     queryFn: async () => {
-      const { data: profile } = await supabase.from("profiles").select("nome").eq("id", user!.id).maybeSingle();
-      if (!profile?.nome) return [];
       const { data: eventos } = await supabase
         .from("eventos")
         .select("id, nome, data_evento")
@@ -67,9 +65,10 @@ function ProdutorPage() {
         .from("apoios")
         .select("evento_id")
         .eq("status", "aprovado")
-        .eq("nome_apoiador", profile.nome)
+        .eq("user_id", user!.id)
         .in("evento_id", passados.map((e) => e.id));
       const idsApoiados = new Set((apoios ?? []).map((a) => a.evento_id));
+
       const { data: jaAvaliou } = await supabase
         .from("avaliacoes_produtor")
         .select("evento_id")
