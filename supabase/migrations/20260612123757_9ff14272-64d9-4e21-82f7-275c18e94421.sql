@@ -1,0 +1,1 @@
+ALTER TABLE public.bandas ADD COLUMN IF NOT EXISTS musica text;
