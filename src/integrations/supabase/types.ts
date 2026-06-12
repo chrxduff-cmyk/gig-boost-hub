@@ -24,6 +24,7 @@ export type Database = {
           pontos: number
           status: string
           txid: string | null
+          user_id: string | null
           valor: number
         }
         Insert: {
@@ -35,6 +36,7 @@ export type Database = {
           pontos?: number
           status?: string
           txid?: string | null
+          user_id?: string | null
           valor: number
         }
         Update: {
@@ -46,6 +48,7 @@ export type Database = {
           pontos?: number
           status?: string
           txid?: string | null
+          user_id?: string | null
           valor?: number
         }
         Relationships: [
@@ -368,6 +371,14 @@ export type Database = {
     Functions: {
       aprovar_apoio: { Args: { _apoio_id: string }; Returns: undefined }
       cancelar_apoio: { Args: { _apoio_id: string }; Returns: undefined }
+      get_pix_config_public: {
+        Args: never
+        Returns: {
+          chave: string
+          cidade: string
+          nome_recebedor: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
