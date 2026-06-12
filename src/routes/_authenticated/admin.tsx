@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { EventoWizard } from "@/components/EventoWizard";
 import { ImageUploadField } from "@/components/ImageUploadField";
+import { AudioUploadField } from "@/components/AudioUploadField";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — União das Bandas" }] }),
@@ -192,7 +193,8 @@ function BandasTab() {
     const payload = {
       nome: form.nome, foto: form.foto || null, release: form.release || null,
       cidade: form.cidade || null, instagram: form.instagram || null,
-      youtube: form.youtube || null, spotify: form.spotify || null, status: form.status || "ativa",
+      youtube: form.youtube || null, spotify: form.spotify || null,
+      musica: form.musica || null, status: form.status || "ativa",
     };
     const { error } = edit?.id
       ? await supabase.from("bandas").update(payload).eq("id", edit.id)
@@ -246,12 +248,14 @@ function BandaForm({ initial, onSubmit }: { initial: any; onSubmit: (f: any) => 
   const [f, setF] = useState({
     nome: initial?.nome ?? "", foto: initial?.foto ?? "", release: initial?.release ?? "",
     cidade: initial?.cidade ?? "", instagram: initial?.instagram ?? "",
-    youtube: initial?.youtube ?? "", spotify: initial?.spotify ?? "", status: initial?.status ?? "ativa",
+    youtube: initial?.youtube ?? "", spotify: initial?.spotify ?? "",
+    musica: initial?.musica ?? "", status: initial?.status ?? "ativa",
   });
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-3">
       <div><Label>Nome</Label><Input required value={f.nome} onChange={(e) => setF({ ...f, nome: e.target.value })} /></div>
       <ImageUploadField label="Logo da banda" bucket="band-logos" value={f.foto} onChange={(url) => setF({ ...f, foto: url })} />
+      <AudioUploadField label="Faixa MP3 (toca ao passar o mouse na miniatura)" bucket="band-tracks" value={f.musica} onChange={(url) => setF({ ...f, musica: url })} />
       <div><Label>Cidade</Label><Input value={f.cidade} onChange={(e) => setF({ ...f, cidade: e.target.value })} /></div>
       <div><Label>Release</Label><Textarea rows={4} value={f.release} onChange={(e) => setF({ ...f, release: e.target.value })} /></div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">

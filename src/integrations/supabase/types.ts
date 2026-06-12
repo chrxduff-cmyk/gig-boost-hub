@@ -120,6 +120,7 @@ export type Database = {
           foto: string | null
           id: string
           instagram: string | null
+          musica: string | null
           nome: string
           owner_id: string | null
           release: string | null
@@ -133,6 +134,7 @@ export type Database = {
           foto?: string | null
           id?: string
           instagram?: string | null
+          musica?: string | null
           nome: string
           owner_id?: string | null
           release?: string | null
@@ -146,6 +148,7 @@ export type Database = {
           foto?: string | null
           id?: string
           instagram?: string | null
+          musica?: string | null
           nome?: string
           owner_id?: string | null
           release?: string | null
