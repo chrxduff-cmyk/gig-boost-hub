@@ -17,9 +17,12 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProdutoresIndexRouteImport } from './routes/produtores.index'
 import { Route as EventosIndexRouteImport } from './routes/eventos.index'
+import { Route as CasasIndexRouteImport } from './routes/casas.index'
 import { Route as BandasIndexRouteImport } from './routes/bandas.index'
 import { Route as ProdutoresIdRouteImport } from './routes/produtores.$id'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
+import { Route as CasasCadastrarRouteImport } from './routes/casas.cadastrar'
+import { Route as CasasIdRouteImport } from './routes/casas.$id'
 import { Route as BandasIdRouteImport } from './routes/bandas.$id'
 import { Route as ApoiarBandaIdRouteImport } from './routes/apoiar.$bandaId'
 import { Route as AuthenticatedMinhaBandaRouteImport } from './routes/_authenticated/minha-banda'
@@ -64,6 +67,11 @@ const EventosIndexRoute = EventosIndexRouteImport.update({
   path: '/eventos/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CasasIndexRoute = CasasIndexRouteImport.update({
+  id: '/casas/',
+  path: '/casas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BandasIndexRoute = BandasIndexRouteImport.update({
   id: '/bandas/',
   path: '/bandas/',
@@ -77,6 +85,16 @@ const ProdutoresIdRoute = ProdutoresIdRouteImport.update({
 const EventosIdRoute = EventosIdRouteImport.update({
   id: '/eventos/$id',
   path: '/eventos/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CasasCadastrarRoute = CasasCadastrarRouteImport.update({
+  id: '/casas/cadastrar',
+  path: '/casas/cadastrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CasasIdRoute = CasasIdRouteImport.update({
+  id: '/casas/$id',
+  path: '/casas/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BandasIdRoute = BandasIdRouteImport.update({
@@ -110,9 +128,12 @@ export interface FileRoutesByFullPath {
   '/minha-banda': typeof AuthenticatedMinhaBandaRoute
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
+  '/casas/$id': typeof CasasIdRoute
+  '/casas/cadastrar': typeof CasasCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
   '/produtores/$id': typeof ProdutoresIdRoute
   '/bandas/': typeof BandasIndexRoute
+  '/casas/': typeof CasasIndexRoute
   '/eventos/': typeof EventosIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
 }
@@ -126,9 +147,12 @@ export interface FileRoutesByTo {
   '/minha-banda': typeof AuthenticatedMinhaBandaRoute
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
+  '/casas/$id': typeof CasasIdRoute
+  '/casas/cadastrar': typeof CasasCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
   '/produtores/$id': typeof ProdutoresIdRoute
   '/bandas': typeof BandasIndexRoute
+  '/casas': typeof CasasIndexRoute
   '/eventos': typeof EventosIndexRoute
   '/produtores': typeof ProdutoresIndexRoute
 }
@@ -144,9 +168,12 @@ export interface FileRoutesById {
   '/_authenticated/minha-banda': typeof AuthenticatedMinhaBandaRoute
   '/apoiar/$bandaId': typeof ApoiarBandaIdRoute
   '/bandas/$id': typeof BandasIdRoute
+  '/casas/$id': typeof CasasIdRoute
+  '/casas/cadastrar': typeof CasasCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
   '/produtores/$id': typeof ProdutoresIdRoute
   '/bandas/': typeof BandasIndexRoute
+  '/casas/': typeof CasasIndexRoute
   '/eventos/': typeof EventosIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
 }
@@ -162,9 +189,12 @@ export interface FileRouteTypes {
     | '/minha-banda'
     | '/apoiar/$bandaId'
     | '/bandas/$id'
+    | '/casas/$id'
+    | '/casas/cadastrar'
     | '/eventos/$id'
     | '/produtores/$id'
     | '/bandas/'
+    | '/casas/'
     | '/eventos/'
     | '/produtores/'
   fileRoutesByTo: FileRoutesByTo
@@ -178,9 +208,12 @@ export interface FileRouteTypes {
     | '/minha-banda'
     | '/apoiar/$bandaId'
     | '/bandas/$id'
+    | '/casas/$id'
+    | '/casas/cadastrar'
     | '/eventos/$id'
     | '/produtores/$id'
     | '/bandas'
+    | '/casas'
     | '/eventos'
     | '/produtores'
   id:
@@ -195,9 +228,12 @@ export interface FileRouteTypes {
     | '/_authenticated/minha-banda'
     | '/apoiar/$bandaId'
     | '/bandas/$id'
+    | '/casas/$id'
+    | '/casas/cadastrar'
     | '/eventos/$id'
     | '/produtores/$id'
     | '/bandas/'
+    | '/casas/'
     | '/eventos/'
     | '/produtores/'
   fileRoutesById: FileRoutesById
@@ -211,9 +247,12 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   ApoiarBandaIdRoute: typeof ApoiarBandaIdRoute
   BandasIdRoute: typeof BandasIdRoute
+  CasasIdRoute: typeof CasasIdRoute
+  CasasCadastrarRoute: typeof CasasCadastrarRoute
   EventosIdRoute: typeof EventosIdRoute
   ProdutoresIdRoute: typeof ProdutoresIdRoute
   BandasIndexRoute: typeof BandasIndexRoute
+  CasasIndexRoute: typeof CasasIndexRoute
   EventosIndexRoute: typeof EventosIndexRoute
   ProdutoresIndexRoute: typeof ProdutoresIndexRoute
 }
@@ -276,6 +315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/casas/': {
+      id: '/casas/'
+      path: '/casas'
+      fullPath: '/casas/'
+      preLoaderRoute: typeof CasasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bandas/': {
       id: '/bandas/'
       path: '/bandas'
@@ -295,6 +341,20 @@ declare module '@tanstack/react-router' {
       path: '/eventos/$id'
       fullPath: '/eventos/$id'
       preLoaderRoute: typeof EventosIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/casas/cadastrar': {
+      id: '/casas/cadastrar'
+      path: '/casas/cadastrar'
+      fullPath: '/casas/cadastrar'
+      preLoaderRoute: typeof CasasCadastrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/casas/$id': {
+      id: '/casas/$id'
+      path: '/casas/$id'
+      fullPath: '/casas/$id'
+      preLoaderRoute: typeof CasasIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bandas/$id': {
@@ -350,9 +410,12 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   ApoiarBandaIdRoute: ApoiarBandaIdRoute,
   BandasIdRoute: BandasIdRoute,
+  CasasIdRoute: CasasIdRoute,
+  CasasCadastrarRoute: CasasCadastrarRoute,
   EventosIdRoute: EventosIdRoute,
   ProdutoresIdRoute: ProdutoresIdRoute,
   BandasIndexRoute: BandasIndexRoute,
+  CasasIndexRoute: CasasIndexRoute,
   EventosIndexRoute: EventosIndexRoute,
   ProdutoresIndexRoute: ProdutoresIndexRoute,
 }
