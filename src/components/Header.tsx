@@ -14,6 +14,7 @@ export function Header() {
     { to: "/eventos", label: "Eventos" },
     { to: "/bandas", label: "Bandas" },
     { to: "/produtores", label: "Produtores" },
+    { to: "/casas", label: "Casas" },
     { to: "/ranking", label: "Ranking" },
   ];
 

@@ -52,7 +52,7 @@ function BandaCard({ b }: { b: any }) {
         <h3 className="display text-xl group-hover:text-gold">{b.nome}</h3>
         <p className="mt-1 text-xs text-muted-foreground">{b.cidade}</p>
       </div>
-      {b.musica && <audio ref={audioRef} src={b.musica} preload="none" />}
+      {b.musica && <audio key={b.musica} ref={audioRef} src={b.musica} preload="none" />}
     </Link>
   );
 }

@@ -68,6 +68,41 @@ export type Database = {
           },
         ]
       }
+      avaliacoes_casa: {
+        Row: {
+          casa_id: string
+          comentario: string | null
+          created_at: string
+          estrelas: number
+          id: string
+          user_id: string
+        }
+        Insert: {
+          casa_id: string
+          comentario?: string | null
+          created_at?: string
+          estrelas: number
+          id?: string
+          user_id: string
+        }
+        Update: {
+          casa_id?: string
+          comentario?: string | null
+          created_at?: string
+          estrelas?: number
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avaliacoes_casa_casa_id_fkey"
+            columns: ["casa_id"]
+            isOneToOne: false
+            referencedRelation: "casas_shows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       avaliacoes_produtor: {
         Row: {
           comentario: string | null
@@ -117,6 +152,7 @@ export type Database = {
         Row: {
           cidade: string | null
           created_at: string
+          created_by: string | null
           foto: string | null
           id: string
           instagram: string | null
@@ -131,6 +167,7 @@ export type Database = {
         Insert: {
           cidade?: string | null
           created_at?: string
+          created_by?: string | null
           foto?: string | null
           id?: string
           instagram?: string | null
@@ -145,6 +182,7 @@ export type Database = {
         Update: {
           cidade?: string | null
           created_at?: string
+          created_by?: string | null
           foto?: string | null
           id?: string
           instagram?: string | null
@@ -155,6 +193,66 @@ export type Database = {
           spotify?: string | null
           status?: string
           youtube?: string | null
+        }
+        Relationships: []
+      }
+      casas_shows: {
+        Row: {
+          cidade: string | null
+          created_at: string
+          created_by: string | null
+          descricao: string | null
+          endereco: string | null
+          estado: string | null
+          foto: string | null
+          id: string
+          instagram: string | null
+          latitude: number | null
+          longitude: number | null
+          nome: string
+          owner_id: string | null
+          site: string | null
+          status: string
+          telefone: string | null
+          updated_at: string
+        }
+        Insert: {
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          endereco?: string | null
+          estado?: string | null
+          foto?: string | null
+          id?: string
+          instagram?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          nome: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+          telefone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          endereco?: string | null
+          estado?: string | null
+          foto?: string | null
+          id?: string
+          instagram?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          nome?: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+          telefone?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -286,6 +384,7 @@ export type Database = {
           cidade: string | null
           contato: string | null
           created_at: string
+          created_by: string | null
           foto: string | null
           id: string
           instagram: string | null
@@ -299,6 +398,7 @@ export type Database = {
           cidade?: string | null
           contato?: string | null
           created_at?: string
+          created_by?: string | null
           foto?: string | null
           id?: string
           instagram?: string | null
@@ -312,6 +412,7 @@ export type Database = {
           cidade?: string | null
           contato?: string | null
           created_at?: string
+          created_by?: string | null
           foto?: string | null
           id?: string
           instagram?: string | null
@@ -349,6 +450,36 @@ export type Database = {
         }
         Relationships: []
       }
+      reivindicacoes: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          mensagem: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          mensagem?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          mensagem?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -373,6 +504,7 @@ export type Database = {
     }
     Functions: {
       aprovar_apoio: { Args: { _apoio_id: string }; Returns: undefined }
+      aprovar_reivindicacao: { Args: { _reiv_id: string }; Returns: undefined }
       cancelar_apoio: { Args: { _apoio_id: string }; Returns: undefined }
       get_pix_config_public: {
         Args: never
