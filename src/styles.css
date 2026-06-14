@@ -38,39 +38,39 @@
 
 :root {
   --radius: 0.5rem;
-  /* dark rock theme */
-  --background: oklch(0.14 0.01 20);
-  --foreground: oklch(0.97 0.005 80);
-  --card: oklch(0.18 0.015 20);
-  --card-foreground: oklch(0.97 0.005 80);
-  --popover: oklch(0.18 0.015 20);
-  --popover-foreground: oklch(0.97 0.005 80);
-  --primary: oklch(0.55 0.22 25); /* red blood */
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.24 0.02 30);
-  --secondary-foreground: oklch(0.97 0.005 80);
-  --muted: oklch(0.22 0.01 30);
-  --muted-foreground: oklch(0.68 0.02 60);
-  --accent: oklch(0.78 0.16 85); /* gold */
-  --accent-foreground: oklch(0.15 0.01 20);
-  --destructive: oklch(0.5 0.22 27);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.28 0.02 30);
-  --input: oklch(0.24 0.02 30);
-  --ring: oklch(0.55 0.22 25);
-  --gold: oklch(0.78 0.16 85);
-  --gold-foreground: oklch(0.15 0.01 20);
-  --blood: oklch(0.5 0.24 25);
+  /* Neon Yellow on Black — Spotify-style 60/30/10 */
+  --background: #000000;                 /* 60% — preto profundo */
+  --foreground: #FFFFFF;                 /* 30% — branco */
+  --card: #121212;                       /* superfícies elevadas */
+  --card-foreground: #FFFFFF;
+  --popover: #121212;
+  --popover-foreground: #FFFFFF;
+  --primary: #F0FF00;                    /* 10% — neon yellow */
+  --primary-foreground: #000000;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #FFFFFF;
+  --muted: #181818;
+  --muted-foreground: #B3B3B3;           /* cinza claro */
+  --accent: #F0FF00;
+  --accent-foreground: #000000;
+  --destructive: #ff4d4f;
+  --destructive-foreground: #FFFFFF;
+  --border: #262626;
+  --input: #1a1a1a;
+  --ring: #F0FF00;
+  --gold: #F0FF00;                       /* alias mantido p/ compat */
+  --gold-foreground: #000000;
+  --blood: #F0FF00;
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.16 0.02 20) 0%, oklch(0.22 0.05 25) 50%, oklch(0.18 0.03 30) 100%);
-  --gradient-fire: linear-gradient(135deg, var(--blood), var(--gold));
-  --shadow-glow: 0 0 40px oklch(0.55 0.22 25 / 0.35);
-  --shadow-gold: 0 0 30px oklch(0.78 0.16 85 / 0.3);
+  --gradient-hero: linear-gradient(135deg, #000000 0%, #121212 60%, #1a1a1a 100%);
+  --gradient-fire: linear-gradient(135deg, #F0FF00 0%, #C8FF00 100%);
+  --shadow-glow: 0 0 40px rgba(240, 255, 0, 0.35);
+  --shadow-gold: 0 0 30px rgba(240, 255, 0, 0.30);
 }
 
 .dark {
-  --background: oklch(0.14 0.01 20);
-  --foreground: oklch(0.97 0.005 80);
+  --background: #000000;
+  --foreground: #FFFFFF;
 }
 
 @layer base {
@@ -92,6 +92,7 @@
 }
 @utility bg-fire {
   background: var(--gradient-fire);
+  color: #000000;
 }
 @utility text-gold {
   color: var(--color-gold);
@@ -106,5 +107,5 @@
   box-shadow: var(--shadow-gold);
 }
 @utility glow-text {
-  text-shadow: 0 0 24px oklch(0.78 0.16 85 / 0.5);
+  text-shadow: 0 0 24px rgba(240, 255, 0, 0.55);
 }
