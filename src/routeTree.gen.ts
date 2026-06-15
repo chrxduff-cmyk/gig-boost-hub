@@ -15,12 +15,18 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RadiosIndexRouteImport } from './routes/radios.index'
 import { Route as ProdutoresIndexRouteImport } from './routes/produtores.index'
 import { Route as EventosIndexRouteImport } from './routes/eventos.index'
+import { Route as EstudiosIndexRouteImport } from './routes/estudios.index'
 import { Route as CasasIndexRouteImport } from './routes/casas.index'
 import { Route as BandasIndexRouteImport } from './routes/bandas.index'
+import { Route as RadiosCadastrarRouteImport } from './routes/radios.cadastrar'
+import { Route as RadiosIdRouteImport } from './routes/radios.$id'
 import { Route as ProdutoresIdRouteImport } from './routes/produtores.$id'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
+import { Route as EstudiosCadastrarRouteImport } from './routes/estudios.cadastrar'
+import { Route as EstudiosIdRouteImport } from './routes/estudios.$id'
 import { Route as CasasCadastrarRouteImport } from './routes/casas.cadastrar'
 import { Route as CasasIdRouteImport } from './routes/casas.$id'
 import { Route as BandasIdRouteImport } from './routes/bandas.$id'
@@ -57,6 +63,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RadiosIndexRoute = RadiosIndexRouteImport.update({
+  id: '/radios/',
+  path: '/radios/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdutoresIndexRoute = ProdutoresIndexRouteImport.update({
   id: '/produtores/',
   path: '/produtores/',
@@ -65,6 +76,11 @@ const ProdutoresIndexRoute = ProdutoresIndexRouteImport.update({
 const EventosIndexRoute = EventosIndexRouteImport.update({
   id: '/eventos/',
   path: '/eventos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstudiosIndexRoute = EstudiosIndexRouteImport.update({
+  id: '/estudios/',
+  path: '/estudios/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CasasIndexRoute = CasasIndexRouteImport.update({
@@ -77,6 +93,16 @@ const BandasIndexRoute = BandasIndexRouteImport.update({
   path: '/bandas/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RadiosCadastrarRoute = RadiosCadastrarRouteImport.update({
+  id: '/radios/cadastrar',
+  path: '/radios/cadastrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RadiosIdRoute = RadiosIdRouteImport.update({
+  id: '/radios/$id',
+  path: '/radios/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdutoresIdRoute = ProdutoresIdRouteImport.update({
   id: '/produtores/$id',
   path: '/produtores/$id',
@@ -85,6 +111,16 @@ const ProdutoresIdRoute = ProdutoresIdRouteImport.update({
 const EventosIdRoute = EventosIdRouteImport.update({
   id: '/eventos/$id',
   path: '/eventos/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstudiosCadastrarRoute = EstudiosCadastrarRouteImport.update({
+  id: '/estudios/cadastrar',
+  path: '/estudios/cadastrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstudiosIdRoute = EstudiosIdRouteImport.update({
+  id: '/estudios/$id',
+  path: '/estudios/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CasasCadastrarRoute = CasasCadastrarRouteImport.update({
@@ -130,12 +166,18 @@ export interface FileRoutesByFullPath {
   '/bandas/$id': typeof BandasIdRoute
   '/casas/$id': typeof CasasIdRoute
   '/casas/cadastrar': typeof CasasCadastrarRoute
+  '/estudios/$id': typeof EstudiosIdRoute
+  '/estudios/cadastrar': typeof EstudiosCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
   '/produtores/$id': typeof ProdutoresIdRoute
+  '/radios/$id': typeof RadiosIdRoute
+  '/radios/cadastrar': typeof RadiosCadastrarRoute
   '/bandas/': typeof BandasIndexRoute
   '/casas/': typeof CasasIndexRoute
+  '/estudios/': typeof EstudiosIndexRoute
   '/eventos/': typeof EventosIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
+  '/radios/': typeof RadiosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -149,12 +191,18 @@ export interface FileRoutesByTo {
   '/bandas/$id': typeof BandasIdRoute
   '/casas/$id': typeof CasasIdRoute
   '/casas/cadastrar': typeof CasasCadastrarRoute
+  '/estudios/$id': typeof EstudiosIdRoute
+  '/estudios/cadastrar': typeof EstudiosCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
   '/produtores/$id': typeof ProdutoresIdRoute
+  '/radios/$id': typeof RadiosIdRoute
+  '/radios/cadastrar': typeof RadiosCadastrarRoute
   '/bandas': typeof BandasIndexRoute
   '/casas': typeof CasasIndexRoute
+  '/estudios': typeof EstudiosIndexRoute
   '/eventos': typeof EventosIndexRoute
   '/produtores': typeof ProdutoresIndexRoute
+  '/radios': typeof RadiosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -170,12 +218,18 @@ export interface FileRoutesById {
   '/bandas/$id': typeof BandasIdRoute
   '/casas/$id': typeof CasasIdRoute
   '/casas/cadastrar': typeof CasasCadastrarRoute
+  '/estudios/$id': typeof EstudiosIdRoute
+  '/estudios/cadastrar': typeof EstudiosCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
   '/produtores/$id': typeof ProdutoresIdRoute
+  '/radios/$id': typeof RadiosIdRoute
+  '/radios/cadastrar': typeof RadiosCadastrarRoute
   '/bandas/': typeof BandasIndexRoute
   '/casas/': typeof CasasIndexRoute
+  '/estudios/': typeof EstudiosIndexRoute
   '/eventos/': typeof EventosIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
+  '/radios/': typeof RadiosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -191,12 +245,18 @@ export interface FileRouteTypes {
     | '/bandas/$id'
     | '/casas/$id'
     | '/casas/cadastrar'
+    | '/estudios/$id'
+    | '/estudios/cadastrar'
     | '/eventos/$id'
     | '/produtores/$id'
+    | '/radios/$id'
+    | '/radios/cadastrar'
     | '/bandas/'
     | '/casas/'
+    | '/estudios/'
     | '/eventos/'
     | '/produtores/'
+    | '/radios/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -210,12 +270,18 @@ export interface FileRouteTypes {
     | '/bandas/$id'
     | '/casas/$id'
     | '/casas/cadastrar'
+    | '/estudios/$id'
+    | '/estudios/cadastrar'
     | '/eventos/$id'
     | '/produtores/$id'
+    | '/radios/$id'
+    | '/radios/cadastrar'
     | '/bandas'
     | '/casas'
+    | '/estudios'
     | '/eventos'
     | '/produtores'
+    | '/radios'
   id:
     | '__root__'
     | '/'
@@ -230,12 +296,18 @@ export interface FileRouteTypes {
     | '/bandas/$id'
     | '/casas/$id'
     | '/casas/cadastrar'
+    | '/estudios/$id'
+    | '/estudios/cadastrar'
     | '/eventos/$id'
     | '/produtores/$id'
+    | '/radios/$id'
+    | '/radios/cadastrar'
     | '/bandas/'
     | '/casas/'
+    | '/estudios/'
     | '/eventos/'
     | '/produtores/'
+    | '/radios/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -249,12 +321,18 @@ export interface RootRouteChildren {
   BandasIdRoute: typeof BandasIdRoute
   CasasIdRoute: typeof CasasIdRoute
   CasasCadastrarRoute: typeof CasasCadastrarRoute
+  EstudiosIdRoute: typeof EstudiosIdRoute
+  EstudiosCadastrarRoute: typeof EstudiosCadastrarRoute
   EventosIdRoute: typeof EventosIdRoute
   ProdutoresIdRoute: typeof ProdutoresIdRoute
+  RadiosIdRoute: typeof RadiosIdRoute
+  RadiosCadastrarRoute: typeof RadiosCadastrarRoute
   BandasIndexRoute: typeof BandasIndexRoute
   CasasIndexRoute: typeof CasasIndexRoute
+  EstudiosIndexRoute: typeof EstudiosIndexRoute
   EventosIndexRoute: typeof EventosIndexRoute
   ProdutoresIndexRoute: typeof ProdutoresIndexRoute
+  RadiosIndexRoute: typeof RadiosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -301,6 +379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/radios/': {
+      id: '/radios/'
+      path: '/radios'
+      fullPath: '/radios/'
+      preLoaderRoute: typeof RadiosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produtores/': {
       id: '/produtores/'
       path: '/produtores'
@@ -313,6 +398,13 @@ declare module '@tanstack/react-router' {
       path: '/eventos'
       fullPath: '/eventos/'
       preLoaderRoute: typeof EventosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estudios/': {
+      id: '/estudios/'
+      path: '/estudios'
+      fullPath: '/estudios/'
+      preLoaderRoute: typeof EstudiosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/casas/': {
@@ -329,6 +421,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BandasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/radios/cadastrar': {
+      id: '/radios/cadastrar'
+      path: '/radios/cadastrar'
+      fullPath: '/radios/cadastrar'
+      preLoaderRoute: typeof RadiosCadastrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/radios/$id': {
+      id: '/radios/$id'
+      path: '/radios/$id'
+      fullPath: '/radios/$id'
+      preLoaderRoute: typeof RadiosIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produtores/$id': {
       id: '/produtores/$id'
       path: '/produtores/$id'
@@ -341,6 +447,20 @@ declare module '@tanstack/react-router' {
       path: '/eventos/$id'
       fullPath: '/eventos/$id'
       preLoaderRoute: typeof EventosIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estudios/cadastrar': {
+      id: '/estudios/cadastrar'
+      path: '/estudios/cadastrar'
+      fullPath: '/estudios/cadastrar'
+      preLoaderRoute: typeof EstudiosCadastrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estudios/$id': {
+      id: '/estudios/$id'
+      path: '/estudios/$id'
+      fullPath: '/estudios/$id'
+      preLoaderRoute: typeof EstudiosIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/casas/cadastrar': {
@@ -412,12 +532,18 @@ const rootRouteChildren: RootRouteChildren = {
   BandasIdRoute: BandasIdRoute,
   CasasIdRoute: CasasIdRoute,
   CasasCadastrarRoute: CasasCadastrarRoute,
+  EstudiosIdRoute: EstudiosIdRoute,
+  EstudiosCadastrarRoute: EstudiosCadastrarRoute,
   EventosIdRoute: EventosIdRoute,
   ProdutoresIdRoute: ProdutoresIdRoute,
+  RadiosIdRoute: RadiosIdRoute,
+  RadiosCadastrarRoute: RadiosCadastrarRoute,
   BandasIndexRoute: BandasIndexRoute,
   CasasIndexRoute: CasasIndexRoute,
+  EstudiosIndexRoute: EstudiosIndexRoute,
   EventosIndexRoute: EventosIndexRoute,
   ProdutoresIndexRoute: ProdutoresIndexRoute,
+  RadiosIndexRoute: RadiosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
