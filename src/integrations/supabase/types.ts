@@ -103,6 +103,47 @@ export type Database = {
           },
         ]
       }
+      avaliacoes_estudio: {
+        Row: {
+          banheiro: number
+          comentario: string | null
+          created_at: string
+          equipamentos: number
+          estrutura: number
+          estudio_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          banheiro: number
+          comentario?: string | null
+          created_at?: string
+          equipamentos: number
+          estrutura: number
+          estudio_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          banheiro?: number
+          comentario?: string | null
+          created_at?: string
+          equipamentos?: number
+          estrutura?: number
+          estudio_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avaliacoes_estudio_estudio_id_fkey"
+            columns: ["estudio_id"]
+            isOneToOne: false
+            referencedRelation: "estudios_ensaio"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       avaliacoes_produtor: {
         Row: {
           comentario: string | null
@@ -144,6 +185,41 @@ export type Database = {
             columns: ["produtor_id"]
             isOneToOne: false
             referencedRelation: "produtores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      avaliacoes_radio: {
+        Row: {
+          comentario: string | null
+          created_at: string
+          estrelas: number
+          id: string
+          radio_id: string
+          user_id: string
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string
+          estrelas: number
+          id?: string
+          radio_id: string
+          user_id: string
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string
+          estrelas?: number
+          id?: string
+          radio_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avaliacoes_radio_radio_id_fkey"
+            columns: ["radio_id"]
+            isOneToOne: false
+            referencedRelation: "radios"
             referencedColumns: ["id"]
           },
         ]
@@ -283,6 +359,69 @@ export type Database = {
           singleton?: boolean
           updated_at?: string
           updated_by?: string | null
+        }
+        Relationships: []
+      }
+      estudios_ensaio: {
+        Row: {
+          cidade: string | null
+          created_at: string
+          created_by: string | null
+          descricao: string | null
+          endereco: string | null
+          estado: string | null
+          foto: string | null
+          id: string
+          instagram: string | null
+          latitude: number | null
+          longitude: number | null
+          nome: string
+          owner_id: string | null
+          site: string | null
+          status: string
+          telefone: string | null
+          updated_at: string
+          valor_hora: number | null
+        }
+        Insert: {
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          endereco?: string | null
+          estado?: string | null
+          foto?: string | null
+          id?: string
+          instagram?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          nome: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+          telefone?: string | null
+          updated_at?: string
+          valor_hora?: number | null
+        }
+        Update: {
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          endereco?: string | null
+          estado?: string | null
+          foto?: string | null
+          id?: string
+          instagram?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          nome?: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+          telefone?: string | null
+          updated_at?: string
+          valor_hora?: number | null
         }
         Relationships: []
       }
@@ -447,6 +586,54 @@ export type Database = {
           id?: string
           nome?: string
           termos_aceitos_em?: string | null
+        }
+        Relationships: []
+      }
+      radios: {
+        Row: {
+          cidade: string | null
+          created_at: string
+          created_by: string | null
+          descricao: string | null
+          estado: string | null
+          id: string
+          logo: string | null
+          nome: string
+          owner_id: string | null
+          site: string | null
+          status: string
+          stream_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          estado?: string | null
+          id?: string
+          logo?: string | null
+          nome: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+          stream_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          estado?: string | null
+          id?: string
+          logo?: string | null
+          nome?: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+          stream_url?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
