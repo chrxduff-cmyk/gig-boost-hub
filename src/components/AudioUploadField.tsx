@@ -30,8 +30,9 @@ export function AudioUploadField({ label = "Faixa MP3", bucket, value, onChange,
         contentType: file.type,
       });
       if (error) throw error;
-      const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-      onChange(data.publicUrl);
+      const { data, error: signErr } = await supabase.storage.from(bucket).createSignedUrl(path, 60 * 60 * 24 * 365);
+      if (signErr || !data?.signedUrl) throw signErr ?? new Error("Falha ao gerar URL");
+      onChange(data.signedUrl);
       toast.success("Áudio enviado.");
     } catch (e: any) {
       toast.error("Falha ao enviar: " + e.message);

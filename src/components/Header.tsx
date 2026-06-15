@@ -15,6 +15,8 @@ export function Header() {
     { to: "/bandas", label: "Bandas" },
     { to: "/produtores", label: "Produtores" },
     { to: "/casas", label: "Casas" },
+    { to: "/estudios", label: "Estúdios" },
+    { to: "/radios", label: "Rádios" },
     { to: "/ranking", label: "Ranking" },
   ];
 
@@ -28,8 +30,9 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         <Link to="/" className="flex items-center gap-2">
           <Flame className="h-6 w-6 text-primary" />
-          <span className="display text-xl font-bold tracking-wider">
-            UNIÃO DAS <span className="text-gold">BANDAS</span>
+          <span className="display text-xl font-bold tracking-wider leading-none">
+            <span className="text-gold">ONESTAGE</span>
+            <span className="block text-[10px] font-medium tracking-[0.2em] text-muted-foreground">ONE PLATFORM · EVERY CONNECTION</span>
           </span>
         </Link>
 

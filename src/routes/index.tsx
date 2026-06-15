@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Flame, Trophy, Calendar, ArrowRight, Music2, Percent, CreditCard, Wallet, Radio } from "lucide-react";
+import { Flame, Trophy, Calendar, ArrowRight, Music2, Percent, CreditCard, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "União das Bandas — Ajude a escolher quem sobe ao palco" },
-      { name: "description", content: "Apoie bandas independentes via PIX. Cada R$10 vira 1 ponto para sua banda favorita." },
+      { title: "ONESTAGE — One Platform. Every Connection." },
+      { name: "description", content: "ONESTAGE conecta bandas, produtores, casas de shows, estúdios e rádios numa só plataforma." },
     ],
   }),
   component: Home,
@@ -192,48 +192,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Rádios Parceiras */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <div className="mb-8">
-          <p className="text-xs uppercase tracking-widest text-gold">No ar</p>
-          <h2 className="display text-4xl font-bold">Rádios Parceiras</h2>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Quem toca a cena junto com a gente.
-          </p>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <a
-            href="https://bateraradio.com.br/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-4 rounded-xl border border-border bg-card p-6 transition hover:border-gold/50 hover:shadow-glow"
-          >
-            <div className="rounded-full bg-fire/15 p-3">
-              <Radio className="h-6 w-6 text-gold" />
-            </div>
-            <div className="flex-1">
-              <h3 className="display text-xl group-hover:text-gold">Batera Radio Rock</h3>
-              <p className="mt-1 text-xs text-muted-foreground">bateraradio.com.br</p>
-            </div>
-            <ArrowRight className="h-5 w-5 text-muted-foreground transition group-hover:text-gold" />
-          </a>
-          <a
-            href="https://www.radios.com.br/aovivo/hbc-radio/221675"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-4 rounded-xl border border-border bg-card p-6 transition hover:border-gold/50 hover:shadow-glow"
-          >
-            <div className="rounded-full bg-fire/15 p-3">
-              <Radio className="h-6 w-6 text-gold" />
-            </div>
-            <div className="flex-1">
-              <h3 className="display text-xl group-hover:text-gold">HBC Radio</h3>
-              <p className="mt-1 text-xs text-muted-foreground">radios.com.br/aovivo/hbc-radio</p>
-            </div>
-            <ArrowRight className="h-5 w-5 text-muted-foreground transition group-hover:text-gold" />
-          </a>
-        </div>
-      </section>
     </div>
   );
 }
