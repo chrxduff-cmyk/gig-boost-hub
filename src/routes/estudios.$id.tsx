@@ -217,7 +217,6 @@ function EstudioPage() {
                 <div className="flex flex-wrap items-center gap-4">
                   <span className="text-xs text-muted-foreground">Estrutura</span><StarsDisplay value={a.estrutura} size={12} />
                   <span className="text-xs text-muted-foreground">Equipamentos</span><StarsDisplay value={a.equipamentos} size={12} />
-                  <span className="text-xs text-muted-foreground">Banheiro</span><StarsDisplay value={a.banheiro} size={12} />
                   <span className="ml-auto text-xs text-muted-foreground">{new Date(a.created_at).toLocaleDateString("pt-BR")}</span>
                 </div>
                 {a.comentario && <p className="mt-2 text-sm text-muted-foreground">{a.comentario}</p>}
