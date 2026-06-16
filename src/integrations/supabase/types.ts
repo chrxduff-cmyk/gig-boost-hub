@@ -105,7 +105,6 @@ export type Database = {
       }
       avaliacoes_estudio: {
         Row: {
-          banheiro: number
           comentario: string | null
           created_at: string
           equipamentos: number
@@ -115,7 +114,6 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          banheiro: number
           comentario?: string | null
           created_at?: string
           equipamentos: number
@@ -125,7 +123,6 @@ export type Database = {
           user_id: string
         }
         Update: {
-          banheiro?: number
           comentario?: string | null
           created_at?: string
           equipamentos?: number
@@ -707,6 +704,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      moderar_cadastro: {
+        Args: { _aprovar: boolean; _entity_type: string; _id: string }
+        Returns: undefined
       }
       pode_avaliar_produtor: {
         Args: { _evento_id: string; _produtor_id: string; _user_id: string }

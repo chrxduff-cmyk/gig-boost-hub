@@ -36,7 +36,7 @@ function EstudioPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("avaliacoes_estudio")
-        .select("id, estrutura, equipamentos, banheiro, comentario, created_at, user_id")
+        .select("id, estrutura, equipamentos, comentario, created_at, user_id")
         .eq("estudio_id", id)
         .order("created_at", { ascending: false });
       return data ?? [];
@@ -45,31 +45,30 @@ function EstudioPage() {
 
   const minha = avals?.find((a) => a.user_id === user?.id);
   const n = avals?.length ?? 0;
-  const med = (k: "estrutura" | "equipamentos" | "banheiro") =>
+  const med = (k: "estrutura" | "equipamentos") =>
     n ? avals!.reduce((s, a) => s + (a as any)[k], 0) / n : 0;
-  const geral = n ? (med("estrutura") + med("equipamentos") + med("banheiro")) / 3 : 0;
+  const geral = n ? (med("estrutura") + med("equipamentos")) / 2 : 0;
 
   const [estrutura, setEstrutura] = useState(0);
   const [equipamentos, setEquipamentos] = useState(0);
-  const [banheiro, setBanheiro] = useState(0);
   const [coment, setComent] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function avaliar() {
     if (!user) { toast.error("Entre para avaliar."); return; }
-    if (estrutura < 1 || equipamentos < 1 || banheiro < 1) {
-      toast.error("Avalie estrutura, equipamentos e banheiro (1 a 5).");
+    if (estrutura < 1 || equipamentos < 1) {
+      toast.error("Avalie estrutura e equipamentos (1 a 5).");
       return;
     }
     setBusy(true);
     const { error } = await supabase.from("avaliacoes_estudio").upsert(
-      { estudio_id: id, user_id: user.id, estrutura, equipamentos, banheiro, comentario: coment.trim() || null },
+      { estudio_id: id, user_id: user.id, estrutura, equipamentos, comentario: coment.trim() || null },
       { onConflict: "estudio_id,user_id" },
     );
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Avaliação enviada!");
-    setEstrutura(0); setEquipamentos(0); setBanheiro(0); setComent("");
+    setEstrutura(0); setEquipamentos(0); setComent("");
     qc.invalidateQueries({ queryKey: ["estudio-avals", id] });
   }
 
@@ -121,7 +120,6 @@ function EstudioPage() {
             <div className="rounded-lg border border-border bg-card p-3 text-xs text-muted-foreground">
               <div className="flex justify-between">Estrutura<StarsDisplay value={med("estrutura")} size={12} /></div>
               <div className="flex justify-between">Equipamentos<StarsDisplay value={med("equipamentos")} size={12} /></div>
-              <div className="flex justify-between">Banheiro<StarsDisplay value={med("banheiro")} size={12} /></div>
             </div>
           </div>
 
@@ -185,7 +183,7 @@ function EstudioPage() {
             <p className="text-sm text-muted-foreground">
               {minha ? "Você já avaliou. Envie novamente para atualizar." : "Compartilhe sua experiência:"}
             </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div>
                 <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">Estrutura</p>
                 <StarRating value={estrutura || minha?.estrutura || 0} onChange={setEstrutura} size={24} />
@@ -193,10 +191,6 @@ function EstudioPage() {
               <div>
                 <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">Equipamentos</p>
                 <StarRating value={equipamentos || minha?.equipamentos || 0} onChange={setEquipamentos} size={24} />
-              </div>
-              <div>
-                <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">Banheiro</p>
-                <StarRating value={banheiro || minha?.banheiro || 0} onChange={setBanheiro} size={24} />
               </div>
             </div>
             <Textarea
@@ -223,7 +217,6 @@ function EstudioPage() {
                 <div className="flex flex-wrap items-center gap-4">
                   <span className="text-xs text-muted-foreground">Estrutura</span><StarsDisplay value={a.estrutura} size={12} />
                   <span className="text-xs text-muted-foreground">Equipamentos</span><StarsDisplay value={a.equipamentos} size={12} />
-                  <span className="text-xs text-muted-foreground">Banheiro</span><StarsDisplay value={a.banheiro} size={12} />
                   <span className="ml-auto text-xs text-muted-foreground">{new Date(a.created_at).toLocaleDateString("pt-BR")}</span>
                 </div>
                 {a.comentario && <p className="mt-2 text-sm text-muted-foreground">{a.comentario}</p>}

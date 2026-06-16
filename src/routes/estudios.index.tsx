@@ -8,7 +8,7 @@ export const Route = createFileRoute("/estudios/")({
   head: () => ({
     meta: [
       { title: "Estúdios de Ensaio — ONESTAGE" },
-      { name: "description", content: "Encontre estúdios de ensaio com avaliações de estrutura, equipamentos e banheiro." },
+      { name: "description", content: "Encontre estúdios de ensaio com avaliações de estrutura e equipamentos." },
     ],
   }),
   component: EstudiosPage,
@@ -34,7 +34,7 @@ function EstudiosPage() {
           <p className="text-xs uppercase tracking-widest text-gold">Onde ensaiar</p>
           <h1 className="display text-4xl">Estúdios de Ensaio</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Avalie estrutura, equipamentos e banheiro de cada estúdio. Cadastre o seu e ajude a cena.
+            Avalie estrutura e equipamentos de cada estúdio. Cadastre o seu e ajude a cena.
           </p>
         </div>
         <Button asChild className="bg-fire shadow-glow">
