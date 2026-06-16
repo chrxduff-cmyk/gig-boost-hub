@@ -141,6 +141,47 @@ export type Database = {
           },
         ]
       }
+      avaliacoes_loja: {
+        Row: {
+          atendimento: number
+          comentario: string | null
+          created_at: string
+          id: string
+          loja_id: string
+          preco: number
+          user_id: string
+          variedade: number
+        }
+        Insert: {
+          atendimento: number
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          loja_id: string
+          preco: number
+          user_id: string
+          variedade: number
+        }
+        Update: {
+          atendimento?: number
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          loja_id?: string
+          preco?: number
+          user_id?: string
+          variedade?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avaliacoes_loja_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       avaliacoes_produtor: {
         Row: {
           comentario: string | null
@@ -468,6 +509,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      lojas: {
+        Row: {
+          categoria: string | null
+          cidade: string | null
+          created_at: string
+          created_by: string | null
+          descricao: string | null
+          endereco: string | null
+          estado: string | null
+          foto: string | null
+          id: string
+          instagram: string | null
+          latitude: number | null
+          longitude: number | null
+          nome: string
+          owner_id: string | null
+          site: string | null
+          status: string
+          telefone: string | null
+          updated_at: string
+        }
+        Insert: {
+          categoria?: string | null
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          endereco?: string | null
+          estado?: string | null
+          foto?: string | null
+          id?: string
+          instagram?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          nome: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+          telefone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          categoria?: string | null
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          endereco?: string | null
+          estado?: string | null
+          foto?: string | null
+          id?: string
+          instagram?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          nome?: string
+          owner_id?: string | null
+          site?: string | null
+          status?: string
+          telefone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       participacao_evento: {
         Row: {
