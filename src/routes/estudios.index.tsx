@@ -8,7 +8,7 @@ export const Route = createFileRoute("/estudios/")({
   head: () => ({
     meta: [
       { title: "Estúdios de Ensaio — ONESTAGE" },
-      { name: "description", content: "Encontre estúdios de ensaio com avaliações de estrutura, equipamentos e banheiro." },
+      { name: "description", content: "Encontre estúdios de ensaio com avaliações de estrutura e equipamentos." },
     ],
   }),
   component: EstudiosPage,
