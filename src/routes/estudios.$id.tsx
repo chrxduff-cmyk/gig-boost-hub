@@ -120,7 +120,6 @@ function EstudioPage() {
             <div className="rounded-lg border border-border bg-card p-3 text-xs text-muted-foreground">
               <div className="flex justify-between">Estrutura<StarsDisplay value={med("estrutura")} size={12} /></div>
               <div className="flex justify-between">Equipamentos<StarsDisplay value={med("equipamentos")} size={12} /></div>
-              <div className="flex justify-between">Banheiro<StarsDisplay value={med("banheiro")} size={12} /></div>
             </div>
           </div>
 
