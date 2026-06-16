@@ -17,6 +17,7 @@ export function Header() {
     { to: "/casas", label: "Casas" },
     { to: "/estudios", label: "Estúdios" },
     { to: "/radios", label: "Rádios" },
+    { to: "/lojas", label: "Lojas" },
     { to: "/ranking", label: "Ranking" },
   ];
 
