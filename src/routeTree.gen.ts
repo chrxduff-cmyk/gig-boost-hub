@@ -17,6 +17,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RadiosIndexRouteImport } from './routes/radios.index'
 import { Route as ProdutoresIndexRouteImport } from './routes/produtores.index'
+import { Route as LojasIndexRouteImport } from './routes/lojas.index'
 import { Route as EventosIndexRouteImport } from './routes/eventos.index'
 import { Route as EstudiosIndexRouteImport } from './routes/estudios.index'
 import { Route as CasasIndexRouteImport } from './routes/casas.index'
@@ -24,6 +25,8 @@ import { Route as BandasIndexRouteImport } from './routes/bandas.index'
 import { Route as RadiosCadastrarRouteImport } from './routes/radios.cadastrar'
 import { Route as RadiosIdRouteImport } from './routes/radios.$id'
 import { Route as ProdutoresIdRouteImport } from './routes/produtores.$id'
+import { Route as LojasCadastrarRouteImport } from './routes/lojas.cadastrar'
+import { Route as LojasIdRouteImport } from './routes/lojas.$id'
 import { Route as EventosIdRouteImport } from './routes/eventos.$id'
 import { Route as EstudiosCadastrarRouteImport } from './routes/estudios.cadastrar'
 import { Route as EstudiosIdRouteImport } from './routes/estudios.$id'
@@ -73,6 +76,11 @@ const ProdutoresIndexRoute = ProdutoresIndexRouteImport.update({
   path: '/produtores/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LojasIndexRoute = LojasIndexRouteImport.update({
+  id: '/lojas/',
+  path: '/lojas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventosIndexRoute = EventosIndexRouteImport.update({
   id: '/eventos/',
   path: '/eventos/',
@@ -106,6 +114,16 @@ const RadiosIdRoute = RadiosIdRouteImport.update({
 const ProdutoresIdRoute = ProdutoresIdRouteImport.update({
   id: '/produtores/$id',
   path: '/produtores/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LojasCadastrarRoute = LojasCadastrarRouteImport.update({
+  id: '/lojas/cadastrar',
+  path: '/lojas/cadastrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LojasIdRoute = LojasIdRouteImport.update({
+  id: '/lojas/$id',
+  path: '/lojas/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventosIdRoute = EventosIdRouteImport.update({
@@ -169,6 +187,8 @@ export interface FileRoutesByFullPath {
   '/estudios/$id': typeof EstudiosIdRoute
   '/estudios/cadastrar': typeof EstudiosCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/lojas/$id': typeof LojasIdRoute
+  '/lojas/cadastrar': typeof LojasCadastrarRoute
   '/produtores/$id': typeof ProdutoresIdRoute
   '/radios/$id': typeof RadiosIdRoute
   '/radios/cadastrar': typeof RadiosCadastrarRoute
@@ -176,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/casas/': typeof CasasIndexRoute
   '/estudios/': typeof EstudiosIndexRoute
   '/eventos/': typeof EventosIndexRoute
+  '/lojas/': typeof LojasIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
   '/radios/': typeof RadiosIndexRoute
 }
@@ -194,6 +215,8 @@ export interface FileRoutesByTo {
   '/estudios/$id': typeof EstudiosIdRoute
   '/estudios/cadastrar': typeof EstudiosCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/lojas/$id': typeof LojasIdRoute
+  '/lojas/cadastrar': typeof LojasCadastrarRoute
   '/produtores/$id': typeof ProdutoresIdRoute
   '/radios/$id': typeof RadiosIdRoute
   '/radios/cadastrar': typeof RadiosCadastrarRoute
@@ -201,6 +224,7 @@ export interface FileRoutesByTo {
   '/casas': typeof CasasIndexRoute
   '/estudios': typeof EstudiosIndexRoute
   '/eventos': typeof EventosIndexRoute
+  '/lojas': typeof LojasIndexRoute
   '/produtores': typeof ProdutoresIndexRoute
   '/radios': typeof RadiosIndexRoute
 }
@@ -221,6 +245,8 @@ export interface FileRoutesById {
   '/estudios/$id': typeof EstudiosIdRoute
   '/estudios/cadastrar': typeof EstudiosCadastrarRoute
   '/eventos/$id': typeof EventosIdRoute
+  '/lojas/$id': typeof LojasIdRoute
+  '/lojas/cadastrar': typeof LojasCadastrarRoute
   '/produtores/$id': typeof ProdutoresIdRoute
   '/radios/$id': typeof RadiosIdRoute
   '/radios/cadastrar': typeof RadiosCadastrarRoute
@@ -228,6 +254,7 @@ export interface FileRoutesById {
   '/casas/': typeof CasasIndexRoute
   '/estudios/': typeof EstudiosIndexRoute
   '/eventos/': typeof EventosIndexRoute
+  '/lojas/': typeof LojasIndexRoute
   '/produtores/': typeof ProdutoresIndexRoute
   '/radios/': typeof RadiosIndexRoute
 }
@@ -248,6 +275,8 @@ export interface FileRouteTypes {
     | '/estudios/$id'
     | '/estudios/cadastrar'
     | '/eventos/$id'
+    | '/lojas/$id'
+    | '/lojas/cadastrar'
     | '/produtores/$id'
     | '/radios/$id'
     | '/radios/cadastrar'
@@ -255,6 +284,7 @@ export interface FileRouteTypes {
     | '/casas/'
     | '/estudios/'
     | '/eventos/'
+    | '/lojas/'
     | '/produtores/'
     | '/radios/'
   fileRoutesByTo: FileRoutesByTo
@@ -273,6 +303,8 @@ export interface FileRouteTypes {
     | '/estudios/$id'
     | '/estudios/cadastrar'
     | '/eventos/$id'
+    | '/lojas/$id'
+    | '/lojas/cadastrar'
     | '/produtores/$id'
     | '/radios/$id'
     | '/radios/cadastrar'
@@ -280,6 +312,7 @@ export interface FileRouteTypes {
     | '/casas'
     | '/estudios'
     | '/eventos'
+    | '/lojas'
     | '/produtores'
     | '/radios'
   id:
@@ -299,6 +332,8 @@ export interface FileRouteTypes {
     | '/estudios/$id'
     | '/estudios/cadastrar'
     | '/eventos/$id'
+    | '/lojas/$id'
+    | '/lojas/cadastrar'
     | '/produtores/$id'
     | '/radios/$id'
     | '/radios/cadastrar'
@@ -306,6 +341,7 @@ export interface FileRouteTypes {
     | '/casas/'
     | '/estudios/'
     | '/eventos/'
+    | '/lojas/'
     | '/produtores/'
     | '/radios/'
   fileRoutesById: FileRoutesById
@@ -324,6 +360,8 @@ export interface RootRouteChildren {
   EstudiosIdRoute: typeof EstudiosIdRoute
   EstudiosCadastrarRoute: typeof EstudiosCadastrarRoute
   EventosIdRoute: typeof EventosIdRoute
+  LojasIdRoute: typeof LojasIdRoute
+  LojasCadastrarRoute: typeof LojasCadastrarRoute
   ProdutoresIdRoute: typeof ProdutoresIdRoute
   RadiosIdRoute: typeof RadiosIdRoute
   RadiosCadastrarRoute: typeof RadiosCadastrarRoute
@@ -331,6 +369,7 @@ export interface RootRouteChildren {
   CasasIndexRoute: typeof CasasIndexRoute
   EstudiosIndexRoute: typeof EstudiosIndexRoute
   EventosIndexRoute: typeof EventosIndexRoute
+  LojasIndexRoute: typeof LojasIndexRoute
   ProdutoresIndexRoute: typeof ProdutoresIndexRoute
   RadiosIndexRoute: typeof RadiosIndexRoute
 }
@@ -393,6 +432,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdutoresIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lojas/': {
+      id: '/lojas/'
+      path: '/lojas'
+      fullPath: '/lojas/'
+      preLoaderRoute: typeof LojasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/eventos/': {
       id: '/eventos/'
       path: '/eventos'
@@ -440,6 +486,20 @@ declare module '@tanstack/react-router' {
       path: '/produtores/$id'
       fullPath: '/produtores/$id'
       preLoaderRoute: typeof ProdutoresIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lojas/cadastrar': {
+      id: '/lojas/cadastrar'
+      path: '/lojas/cadastrar'
+      fullPath: '/lojas/cadastrar'
+      preLoaderRoute: typeof LojasCadastrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lojas/$id': {
+      id: '/lojas/$id'
+      path: '/lojas/$id'
+      fullPath: '/lojas/$id'
+      preLoaderRoute: typeof LojasIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eventos/$id': {
@@ -535,6 +595,8 @@ const rootRouteChildren: RootRouteChildren = {
   EstudiosIdRoute: EstudiosIdRoute,
   EstudiosCadastrarRoute: EstudiosCadastrarRoute,
   EventosIdRoute: EventosIdRoute,
+  LojasIdRoute: LojasIdRoute,
+  LojasCadastrarRoute: LojasCadastrarRoute,
   ProdutoresIdRoute: ProdutoresIdRoute,
   RadiosIdRoute: RadiosIdRoute,
   RadiosCadastrarRoute: RadiosCadastrarRoute,
@@ -542,6 +604,7 @@ const rootRouteChildren: RootRouteChildren = {
   CasasIndexRoute: CasasIndexRoute,
   EstudiosIndexRoute: EstudiosIndexRoute,
   EventosIndexRoute: EventosIndexRoute,
+  LojasIndexRoute: LojasIndexRoute,
   ProdutoresIndexRoute: ProdutoresIndexRoute,
   RadiosIndexRoute: RadiosIndexRoute,
 }

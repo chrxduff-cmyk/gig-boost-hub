@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Download, Check, X, Music2, Calendar, Users, DollarSign, UserCircle2, KeyRound, Trash2, ListPlus } from "lucide-react";
+import { Plus, Download, Check, X, Music2, Calendar, Users, DollarSign, UserCircle2, KeyRound, Trash2, ListPlus, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -36,8 +36,9 @@ function AdminPage() {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <h1 className="display text-4xl">Dashboard Administrativo</h1>
       <StatsRow />
-      <Tabs defaultValue="apoios" className="mt-8">
+      <Tabs defaultValue="pendentes" className="mt-8">
         <TabsList>
+          <TabsTrigger value="pendentes"><Clock className="mr-1 h-3.5 w-3.5" />Pendentes</TabsTrigger>
           <TabsTrigger value="apoios">Apoios</TabsTrigger>
           <TabsTrigger value="bandas">Bandas</TabsTrigger>
           <TabsTrigger value="produtores">Produtores</TabsTrigger>
@@ -45,6 +46,7 @@ function AdminPage() {
           <TabsTrigger value="ranking">Ranking</TabsTrigger>
           <TabsTrigger value="pix"><KeyRound className="mr-1 h-3.5 w-3.5" />PIX</TabsTrigger>
         </TabsList>
+        <TabsContent value="pendentes"><PendentesTab /></TabsContent>
         <TabsContent value="apoios"><ApoiosTab /></TabsContent>
         <TabsContent value="bandas"><BandasTab /></TabsContent>
         <TabsContent value="produtores"><ProdutoresTab /></TabsContent>
@@ -52,6 +54,73 @@ function AdminPage() {
         <TabsContent value="ranking"><RankingTab /></TabsContent>
         <TabsContent value="pix"><PixTab /></TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+const PENDING_ENTITIES = [
+  { type: "banda", table: "bandas", label: "Banda" },
+  { type: "casa", table: "casas_shows", label: "Casa de Shows" },
+  { type: "estudio", table: "estudios_ensaio", label: "Estúdio" },
+  { type: "radio", table: "radios", label: "Rádio" },
+  { type: "loja", table: "lojas", label: "Loja/Expositor" },
+  { type: "produtor", table: "produtores", label: "Produtor" },
+] as const;
+
+function PendentesTab() {
+  const qc = useQueryClient();
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-pendentes"],
+    queryFn: async () => {
+      const results = await Promise.all(
+        PENDING_ENTITIES.map(async (e) => {
+          const { data } = await supabase
+            .from(e.table as any)
+            .select("id, nome, cidade, created_at")
+            .eq("status", "pendente")
+            .order("created_at", { ascending: false });
+          return (data ?? []).map((r: any) => ({ ...r, _type: e.type, _label: e.label }));
+        }),
+      );
+      return results.flat();
+    },
+  });
+
+  async function moderar(entity_type: string, id: string, aprovar: boolean) {
+    const { error } = await supabase.rpc("moderar_cadastro", { _entity_type: entity_type, _id: id, _aprovar: aprovar });
+    if (error) toast.error(error.message);
+    else { toast.success(aprovar ? "Aprovado." : "Rejeitado."); qc.invalidateQueries({ queryKey: ["admin-pendentes"] }); }
+  }
+
+  if (isLoading) return <div className="mt-6 text-muted-foreground">Carregando...</div>;
+  if (!data || data.length === 0) return (
+    <div className="mt-6 rounded-xl border border-dashed border-border p-12 text-center text-muted-foreground">
+      Nada pendente. Tudo em dia! 🎉
+    </div>
+  );
+
+  return (
+    <div className="mt-6 space-y-2">
+      {data.map((r: any) => (
+        <div key={`${r._type}-${r.id}`} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-4">
+          <div className="min-w-0">
+            <p className="display text-lg">{r.nome}</p>
+            <p className="text-xs text-muted-foreground">
+              <span className="rounded bg-gold/15 px-1.5 py-0.5 text-gold">{r._label}</span>
+              {r.cidade && <span className="ml-2">{r.cidade}</span>}
+              <span className="ml-2">{new Date(r.created_at).toLocaleDateString("pt-BR")}</span>
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => moderar(r._type, r.id, true)}>
+              <Check className="mr-1 h-3.5 w-3.5" /> Aprovar
+            </Button>
+            <Button size="sm" variant="outline" className="text-destructive hover:bg-destructive/10" onClick={() => moderar(r._type, r.id, false)}>
+              <X className="mr-1 h-3.5 w-3.5" /> Rejeitar
+            </Button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
