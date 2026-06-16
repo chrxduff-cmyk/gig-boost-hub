@@ -183,7 +183,7 @@ function EstudioPage() {
             <p className="text-sm text-muted-foreground">
               {minha ? "Você já avaliou. Envie novamente para atualizar." : "Compartilhe sua experiência:"}
             </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div>
                 <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">Estrutura</p>
                 <StarRating value={estrutura || minha?.estrutura || 0} onChange={setEstrutura} size={24} />
@@ -191,10 +191,6 @@ function EstudioPage() {
               <div>
                 <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">Equipamentos</p>
                 <StarRating value={equipamentos || minha?.equipamentos || 0} onChange={setEquipamentos} size={24} />
-              </div>
-              <div>
-                <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">Banheiro</p>
-                <StarRating value={banheiro || minha?.banheiro || 0} onChange={setBanheiro} size={24} />
               </div>
             </div>
             <Textarea
