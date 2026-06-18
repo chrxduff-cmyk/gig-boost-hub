@@ -1,4 +1,8 @@
 {
   "buildCommand": "npm run build",
-  "framework": null
+  "outputDirectory": ".output/server",
+  "framework": null,
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
