@@ -14,7 +14,7 @@ export default defineConfig({
   },
   vite: {
     build: {
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 1500,
       minify: "terser",
       terserOptions: {
         compress: {
@@ -24,8 +24,12 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks: {
-            vendor: ["react", "react-dom"],
-            utils: ["zod", "@hookform/resolvers"],
+            react: ["react", "react-dom"],
+            tanstack: ["@tanstack/react-router", "@tanstack/react-query", "@tanstack/react-start"],
+            ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-select"],
+            forms: ["react-hook-form", "@hookform/resolvers", "zod"],
+            charts: ["recharts"],
+            utils: ["sonner", "date-fns", "clsx", "tailwind-merge"],
           },
         },
       },
