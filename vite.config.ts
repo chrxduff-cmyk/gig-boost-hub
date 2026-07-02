@@ -16,18 +16,7 @@ export default defineConfig({
     build: {
       chunkSizeWarningLimit: 1500,
       minify: false,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            react: ["react", "react-dom"],
-            tanstack: ["@tanstack/react-router", "@tanstack/react-query", "@tanstack/react-start"],
-            ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-select"],
-            forms: ["react-hook-form", "@hookform/resolvers", "zod"],
-            charts: ["recharts"],
-            utils: ["sonner", "date-fns", "clsx", "tailwind-merge"],
-          },
-        },
-      },
     },
   },
+
 });
